@@ -70,70 +70,125 @@ module.exports = {
 
     sendEmail : function (req, res) {
 		var emailObject = req.body;
-        apartmentProvider.findAll(function (error, apartments) {
-            if (error) {
-                res.send(error, 500);
-            } else {
 
-                for (i = 0; i < apartments.length; i++) {
-
-                    var apartment = apartments[i];
-					var sendEmail = false;
-					var emailRecipient = null;
-					var emails = [];
-					if(emailObject.emailTo == 'All Residents') {
-						if (apartment.status == 1) {
-							sendEmail = true;
-							emailRecipientName = apartment.tenant.name;
-							if (apartment.owner.emails.length > 0) {
-								emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
-							} 
-						}else {
-							if (apartment.status == 2) {
-								if (apartment.tenant && apartment.tenant.name ) {
+		if (emailObject.mailToAll) {
+				apartmentProvider.findAll(function (error, apartments) {
+					if (error) {
+						res.send(error, 500);
+					} else {
+							for (i = 0; i < apartments.length; i++) {
+								var apartment = apartments[i];
+								var sendEmail = false;
+								var emailRecipient = null;
+								var emails = [];
+								if(emailObject.emailTo == 'All Residents') {
+									if (apartment.status == 1) {
+										sendEmail = true;
+										emailRecipientName = apartment.owner.name;
+										if (apartment.owner.emails.length > 0) {
+											emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
+										} 
+									}else {
+										if (apartment.status == 2) {
+											if (apartment.tenant && apartment.tenant.name ) {
+												sendEmail = true;
+												emailRecipientName = apartment.tenant.name;
+												if (apartment.tenant.emails.length > 0) {
+													emails = apartment.tenant.emails.filter(function (val) { return val !== null; }).join(", ");
+												} 
+											}
+										}
+									}
+								}
+								if (emailObject.emailTo == 'All Flat Owners') {
 									sendEmail = true;
-									emailRecipientName = apartment.tenant.name;
+									emailRecipientName = apartment.owner.name;
 									if (apartment.owner.emails.length > 0) {
 										emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
 									} 
 								}
+
+								if (emailObject.emailTo == 'All Tenants') {
+									if (apartment.status == 2) {
+										if (apartment.tenant && apartment.tenant.name ) {
+											sendEmail = true;
+											emailRecipientName = apartment.tenant.name;
+											if (apartment.owner.emails.length > 0) {
+												emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
+											} 
+										}
+									}
+
+								}
+
+
+								if (sendEmail) {
+									var emailData = {
+										flatnumber: apartment.flatnumber,
+										receipentName: emailRecipientName,
+										emailSubject : emailObject.emailSubject,
+										emailcontent: emailObject.emailcontent
+									}
+									emailSender.sendMail('emailTemplate.html', emailObject.emailSubject, emailData, emails);
+								}
 							}
-						}
 					}
-					if (emailObject.emailTo == 'All Flat Owners') {
+				});
+
+		}else {
+			apartmentProvider.findById(emailObject.flatnumber, function (error, apartment) {
+
+				var sendEmail = false;
+				var emailRecipient = null;
+				var emails = [];
+			
+
+				if (emailObject.emailTo == 'Owner') {
+					sendEmail = true;
+					emailRecipientName = apartment.owner.name;
+					if (apartment.owner.emails.length > 0) {
+						emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
+					} 
+				}
+
+				if (emailObject.emailTo == 'Tenant') {
+					if (apartment.tenant && apartment.tenant.name ) {
 						sendEmail = true;
-						emailRecipientName = apartment.owner.name;
-						if (apartment.owner.emails.length > 0) {
-                            emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
-                        } 
+						emailRecipientName = apartment.tenant.name;
+						if (apartment.tenant.emails.length > 0) {
+							emails = apartment.tenant.emails.filter(function (val) { return val !== null; }).join(", ");
+						} 
 					}
+				}
 
-					if (emailObject.emailTo == 'All Tenants') {
-						if (apartment.status == 2) {
-							if (apartment.tenant && apartment.tenant.name ) {
-								sendEmail = true;
-								emailRecipientName = apartment.tenant.name;
-								if (apartment.owner.emails.length > 0) {
-									emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
-								} 
-							}
-						}
-
+				if (emailObject.emailTo == 'Both - Owner & Tenant') {
+					sendEmail = true;
+					emailRecipientName = apartment.owner.name;
+					if (apartment.owner.emails.length > 0) {
+						emails = apartment.owner.emails.filter(function (val) { return val !== null; }).join(", ");
+					} 
+					if (apartment.tenant && apartment.tenant.name ) {
+						emailRecipientName = apartment.tenant.name;
+						if (apartment.tenant.emails.length > 0) {
+							emails = emails + ',' + apartment.tenant.emails.filter(function (val) { return val !== null; }).join(", ");
+						} 
 					}
+				}
 
 
-                    if (sendEmail) {
-                        var emailData = {
-                            flatnumber: apartment.flatnumber,
-                            receipentName: emailRecipientName,
-                            emailSubject : emailObject.emailSubject,
-                            emailcontent: emailObject.emailcontent
-                        }
-                        emailSender.sendMail('emailTemplate.html', emailObject.emailSubject, emailData, emails);
-                    }
-                }
-            }
-        });
+				if (sendEmail) {
+					var emailData = {
+						flatnumber: apartment.flatnumber,
+						receipentName: emailRecipientName,
+						emailSubject : emailObject.emailSubject,
+						emailcontent: emailObject.emailcontent
+					}
+					emailSender.sendMail('emailTemplate.html', emailObject.emailSubject, emailData, emails);
+				}
+
+			});
+		}
+
 
         res.send(200);
 

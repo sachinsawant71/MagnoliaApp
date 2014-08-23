@@ -9,10 +9,7 @@
             .form-group
                 label.col-sm-2.control-label(for='mailTo') Email To
                 .col-sm-4
-                     select.form-control(name='mailTo', ng-model='mail.emailTo')
-                       option All Flat Owners
-                       option All Residents
-                       option All Tenants
+                     select.form-control(name='mailTo', ng-model='mail.emailTo', ng-options='emailRecepient for emailRecepient in emailRecepients')
             .form-group
                 label.col-sm-2.control-label(for='subject') Subject
                 .col-md-8

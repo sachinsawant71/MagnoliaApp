@@ -1477,6 +1477,8 @@ angular.module('magnoliaApp')
 .controller('DashboardCtrl',['$scope','$http','$modal',function($scope,$http,$modal) {
 
 		$scope.aptSummary = {};
+
+		$scope.emailRecepients = ['All Flat Owners','All Residents','All Tenants'];
  
 		var request = $http({
 			method: "post",
@@ -1565,8 +1567,25 @@ angular.module('magnoliaApp')
 .controller('ModalEmailCtrl',['$scope','$modal','$log','Apartments',function($scope,$modal,$log,Apartments) {
 
 	$scope.mail = {};
-
- 	$scope.open = function () {
+    $scope.mailToAll = true;
+	$scope.flatnumber = null;
+ 	$scope.open = function (apt) {
+		if (apt) {
+			Apartments.get({id:apt.flatnumber},function(apartment) {
+				var ownerEmail = apartment.owner.emails[0];
+				$scope.mailToAll = false;
+				$scope.flatnumber = apt.flatnumber;
+				$scope.emailRecepients = [];
+				$scope.emailRecepients.push('Owner');
+				if (apartment.status == 2) {
+					if (apartment.tenant && apartment.tenant.emails && apartment.tenant.emails[0]) {
+						var tenantEmail = apartment.tenant.emails[0];
+						$scope.emailRecepients.push('Tenant');
+						$scope.emailRecepients.push('Both - Owner & Tenant');
+					}					
+				}					
+			});
+		}
 		var modalInstance = $modal.open({
 		  templateUrl: 'newEmailModal',
           scope : $scope,
@@ -1592,10 +1611,12 @@ angular.module('magnoliaApp')
  
   $scope.ok = function () {	
 
-		var mailObject =      {					
+		var mailObject =      {			
+			mailToAll: $scope.mailToAll,
 			emailTo : $scope.mail.emailTo,
 			emailSubject : $scope.mail.emailSubject,
-			emailcontent : $scope.mail.emailcontent
+			emailcontent : $scope.mail.emailcontent,
+			flatnumber: $scope.flatnumber
 		}
 
 		var request = $http({
