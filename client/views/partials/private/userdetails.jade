@@ -1,0 +1,113 @@
+tabset
+  tab(heading='{{apartmentdataTitle}}')
+   .tab-details
+     .highlight
+       form.form-horizontal.modal-form
+          fieldset(disabled)
+            .form-group
+              label.col-md-3.control-label(for='aptnumber') Apartment Number
+              .col-md-2
+                input#aptnumber.form-control(ng-model='item.flatnumber', name='textinput', placeholder='apartment Number', type='text')
+            .form-group
+              label.col-md-3.control-label(for='salablearea') Saleable Area
+              .col-md-3
+                .input-group
+                  input#salablearea.form-control(ng-model='item.sellableArea', name='SalableArea', placeholder='Salable Area', type='text')
+                  span.input-group-addon Square Feet
+            .form-group
+              label.col-md-3.control-label(for='propertyTaxId') Property Tax Id
+              .col-md-4
+                input#propertyTaxId.form-control.input-large(ng-model='item.propertyTax',name='propertyTaxId', placeholder='PMC property Tax ID', type='text')
+            .form-group
+              label.col-md-3.control-label(for='status') Status
+              .col-md-4
+                  .radio
+                     label(for='status-0')
+                       input#status-0(name='status', ng-model='item.status', value='0', checked='checked', type='radio')
+                       | Empty
+                  .radio
+                     label(for='status-1')
+                        input#status-1(name='status', ng-model='item.status', ng-click='resetTenantAddress()', value='1', type='radio')
+                        | Occupied
+                  .radio
+                     label(for='status-2')
+                        input#status-2(name='status', ng-model='item.status', ng-click='resetTenantAddress()', value='2', type='radio')
+                        | Rented
+            .form-group
+               label.col-md-3.control-label(for='kyc') Gas KYC
+               .col-md-4
+                  .radio
+                     label(for='kyc-0')
+                        input#kyc-0(name='kyc', ng-model='item.gasKYC', value='1', checked='checked', type='radio')
+                        | Completed
+                  .radio
+                     label(for='kyc-0')
+                        input#kyc-1(name='kyc', ng-model='item.gasKYC', value='0', type='radio')
+                        | Pending
+
+  tab(heading='{{ownerdataTitle}}')
+     .tab-details
+       .highlight
+         form.form-horizontal.modal-form
+           fieldset
+             .form-group
+               label.col-md-3.control-label(for='onwername') Name
+               .col-md-5
+                 input#onwername.form-control.input-large(name='textinput', ng-model='item.owner.name', placeholder='Owner Name', type='text')
+             .form-group
+                label.col-md-3.control-label(for='address') Address
+                .col-md-6
+                   textarea#address.form-control(style='width: 350px; height: 100px;', ng-disabled='item.status=="1"', ng-model='item.owner.address', name='textarea') Owner's Address
+             h4 Contact e-mails
+             .form-group
+                label.col-md-3.control-label(for='email1') Primary
+                .col-md-5
+                        input#email1.form-control.input-large(name='email1', ng-model='item.owner.emails[0]', placeholder='Email ID', type='text')
+             .form-group
+                label.col-md-3.control-label(for='email2') Secondary
+                .col-md-5
+                        input#email2.form-control.input-large(name='email2', ng-model='item.owner.emails[1]', placeholder='Second Emai ID', type='text')
+             h4 Phone numbers
+             .form-group
+                label.col-md-3.control-label(for='phone1') Primary
+                .col-md-3
+                        input#phone1.form-control.input-large(name='phone1', ng-model='item.owner.phones[0]', placeholder='Phone Number', type='text')
+             .form-group
+                label.col-md-3.control-label(for='phone2') Secondary
+                .col-md-3
+                        input#phone2.form-control.input-large(name='phone2', ng-model='item.owner.phones[1]', placeholder='Second Phone', type='text')
+             accordion-group.acc(heading='Vehicle Data ({{item.owner.vehicles.length}})')
+                .form-group
+                div#vehicle-data
+                  .col-md-2
+                     label.control-label Vehicle Info:
+                  .col-md-4
+                     input#vehicleNo.form-control(type='text', placeholder='Registration Number',ng-model='vehicle.vehicleNo',capitalize='')
+                  .col-md-4
+                     label.radio-inline(for='status-0')
+                        input#status-0(name='status', ng-model='vehicle.vehicleType', value='0', checked='checked', type='radio')
+                        | 4 Wheel
+                     label.radio-inline(for='status-1')
+                       input#status-1(name='status', ng-model='vehicle.vehicleType', value='1', type='radio')
+                       | 2 Wheel
+                  .col-md-2
+                     button.btn.btn-primary(ng-disabled="vehicle.vehicleNo ==''", ng-click="addVehicleOwner()")
+                        i.fa.fa-plus
+                        | &nbsp;Add
+                div
+                  table.table.table-condensed 
+                    tbody.contact-data
+                       tr(ng:repeat='veh in item.owner.vehicles')
+                         td
+                           | {{veh.vehicleNo}} - (
+                           span(ng-if='veh.vehicleType == "0"') 4-Wheeler)
+                           span(ng-if='veh.vehicleType == "1"') 2-Wheeler)
+                         td
+                            button.btn.btn-danger.btn-xs(type='submit', ng-click='deleteVehicleOwner(veh)')
+                               i.glyphicon.glyphicon-remove
+                               | &nbsp;Delete
+
+  tab(heading='{{tenantdataTitle}}', disabled='item.status!="2"') 
+     .tab-details
+       .highlight
+          | Tenants details

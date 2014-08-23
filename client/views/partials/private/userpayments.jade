@@ -1,0 +1,33 @@
+.container
+       .row
+        .col-md-12
+          .panel.panel-default
+            .panel-heading
+              h3.panel-title
+                strong Maintenance Payment Summary for {{item.flatnumber}}
+            .panel-body
+              .table-responsive
+                table.table.table-condensed
+                  thead
+                    tr
+                      td
+                        strong Period Name
+                      td.text-right
+                        strong Maintenance Due
+                      td.text-right
+                        strong Maintenance Paid
+                  tbody
+                    tr(ng:repeat='payment in item.maintenanceDetails.paymentSummary')
+                      td 
+                         | {{payment.period}}
+                         ul
+                            li(ng:repeat='note in payment.notes') {{note}}
+                      td.text-right {{payment.maintenanceDue | currency : "&#8377;"}}
+                      td.text-right {{payment.maintenancePaid | currency : "&#8377;"}}
+                    tr
+                      td
+                        strong Total
+                      td.text-right {{item.maintenanceDetails.maintenanceDueTotal | currency : "&#8377;"}}          
+                      td.text-right {{item.maintenanceDetails.maintenancePaidTotal| currency : "&#8377;"}}
+              h4(id='{{isDefaulter}}')
+                 | Total Dues = {{(item.maintenanceDetails.maintenanceDueTotal- item.maintenanceDetails.maintenancePaidTotal)  | currency : "&#8377;"}}

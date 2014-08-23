@@ -1,0 +1,31 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Maintenance Payment Summary for {{period}}
+.modal-body
+    table.table.table-bordered
+       tbody
+          tr
+               td Maintenance Period name
+               td(class="text-right") {{period}}
+          tr
+               td Total Maintenance Due
+               td(class="text-right") {{currentPeriodData.periodTotalDue | currency : "&#8377;"}}
+          tr
+               td Total Maintenance Received
+               td(class="text-right") {{currentPeriodData.periodTotalPaid | currency : "&#8377;"}}
+          tr
+               td Total Balance Amount
+               td(class="text-right") {{(currentPeriodData.periodTotalDue - currentPeriodData.periodTotalPaid) | currency : "&#8377;"}}
+          tr
+               td Total Maintenance Received %
+               td(class="text-right") {{currentPeriodData.periodPrctReceived | percentage }}
+          tr
+               td Total number of Defaulters
+               td(class="text-right") {{currentPeriodData.periodNoOfDefaulters}}	  
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled="disableDownload", csv-header="getHeader()", ng-csv="arrayData", ng-click='ok(period)', filename="defaulterListFor{{period}}.csv" ) Download Defaulters' List
+      button.btn.btn-warning(ng-click='cancel()') Cancel
+
+
+

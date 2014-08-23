@@ -1,0 +1,35 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Receipt Details
+.modal-body
+    table.table.table-bordered
+       tbody
+          tr
+               td Party Name
+               td {{item.partyName}}
+          tr(ng-if='item.flatnumber')
+               td Apartment Number
+               td {{item.flatnumber}}
+          tr
+               td Receipt Type
+               td {{item.type}}
+          tr
+               td Receipt Date
+               td {{item.date | date:'dd-MM-yyyy'}}
+          tr
+               td Mode of Payment
+               td {{item.mode}}
+          tr
+               td Bank Name
+               td {{item.bank}}
+          tr
+               td Amount
+               td {{item.amount | currency : "&#8377;"}}
+          tr
+               td Confirmation Code
+               td {{item.confirmationCode}}
+
+.modal-footer
+      button.btn.btn-success(ng-click='confirm()',ng-show='item.status=="0"') Confirm Receipt
+      button.btn.btn-danger(ng-click='reject()',ng-show='item.status=="0"') Check Bounced
+      button.btn.btn-warning(ng-click='cancel()') Cancel

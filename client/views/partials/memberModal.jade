@@ -1,0 +1,67 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Member details 
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='memberForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='flatNo') Flat No
+                  .col-md-4
+                      input#flatNo.form-control.input-large(ng-disabled='true', ng-model='item.flatNo', name='textinput',required='', type='text')                      
+               .form-group
+                  label.col-md-4.control-label(for='memberName') Is Co-Owner
+                  .col-md-4
+                    .checkbox
+                         label
+                           input(type="checkbox",value="", ng-disabled='true', ng-model='item.isCoonwer')
+               .form-group
+                  label.col-md-4.control-label(for='memberName') Member Name
+                  .col-md-6
+                      input#memberName.form-control.input-xlarge(ng-disabled='true', ng-model='item.memberName', name='textinput',placeholder='Member Name',required='', type='text')
+               .form-group
+                  label.col-md-4.control-label(for='contactNumber') Contact Number
+                  .col-md-4
+                      input#contactNumber.form-control(ng-model='item.contactNumber', ng-disabled='true', placeholder='Contact Number',numbers-only='numbers-only',required='', name='text')
+               .form-group
+                  label.col-md-4.control-label(for='emailId') Email Id
+                  .col-md-4
+                      input#emailId.form-control(ng-model='item.emailId', ng-disabled='true', placeholder='Email Id',required='', name='text')
+
+         .panel.panel-default
+                  .panel-heading
+                         h3.panel-title
+                            i.fa.fa-tags
+                            | &nbsp;&nbsp;Functional Responsibilities
+                  .panel-body
+                      .form-group
+                         label.col-md-1.control-label.functionaArea Area
+                         .col-md-4
+                              select.form-control(ng-model="functionArea.name" ng-options="area.name for area in availableFunctionalAreas")                      
+                         .col-md-5.functionaArea
+                              label.radio-inline(for='ownership-0')
+                                 input#ownership-0(name='ownership', ng-model='functionArea.ownership', value='0', type='radio')
+                                 | Primary Owner
+                              label.radio-inline(for='ownership-1')
+                                 input#ownership-1(name='status', ng-model='functionArea.ownership', value='1', type='radio')
+                                 | Secondary Owner
+                         .col-md-2
+                              button.btn.btn-primary(style="margin-bottom:10px;" , ng-disabled="functionArea.name ==''", ng-click="addFunctionalArea()")
+                                 i.fa.fa-plus
+                                 | &nbsp;Add
+                      div
+                          table.table.table-condensed 
+                               tbody.contact-data
+                                  tr(ng:repeat='area in item.functionAreas')
+                                     td
+                                        | {{area.name}} - (
+                                        span(ng-if='area.ownership == "0"') Primary Owner)
+                                        span(ng-if='area.ownership == "1"') Secondary Owner)
+                                     td
+                                        button.btn.btn-danger.btn-xs(type='submit', ng-click='deleteFunctionalArea(area)')
+                                             i.glyphicon.glyphicon-remove
+                                             | &nbsp;Delete
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!memberForm.$valid', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel

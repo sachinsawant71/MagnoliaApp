@@ -1,0 +1,79 @@
+.screen
+  .modal-header
+    button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+    h4 Payment Confirmation for {{receipt.type}}
+  .modal-body
+    p
+      | The confirmation number for the payment is <strong>{{receipt.confirmationCode}}</strong>.<span ng-if="receipt.email"> The payment acknowledgement is sent to {{receipt.email}}.</span>
+    table.table.table-bordered
+       tbody
+          tr
+               td Party Name
+               td {{receipt.partyName}}
+          tr
+               td Receipt Type
+               td {{receipt.type}}
+          tr
+               td Receipt Date
+               td {{receipt.date | date:'dd-MM-yyyy'}}
+          tr
+               td Mode of Payment
+               td {{receipt.mode}}
+          tr
+               td Bank Name
+               td {{receipt.bank}}
+          tr
+               td Amount
+               td {{receipt.amount | currency : "&#8377;"}}
+ 
+  .modal-footer
+    div(ng-show='!readonly')
+      button.btn.btn-primary(print-div,print-element='printDiv',print-title='Payment Receipt - {{receipt.type}} for {{receipt.partyName}}') Print Receipt
+      button.btn.btn-warning(ng-click='cancel()') Close
+#printDiv
+    img(alt='Client Logo', title='Client Logo', src='/img/printlogo.png' style='width: auto;height: auto;')
+    form.grid-form
+      fieldset     
+         legend
+         div(data-row-span='4')
+            div(data-field-span='3')
+              label
+              label
+            div(data-field-span='1')
+              label Date
+              label {{receipt.date | date:'dd-MM-yyyy' }}
+         div(data-row-span='4',ng-if="receipt.flatnumber")
+            div(data-field-span='1')
+              label Apartment Number
+              label {{receipt.flatnumber}}
+            div(data-field-span='3')
+              label Party Name
+              label {{item.partyName}}
+         div(data-row-span='4',ng-if="!receipt.flatnumber")
+            div(data-field-span='1')
+              label &nbsp;
+              label &nbsp;
+            div(data-field-span='3')
+              label Party Name
+              label {{item.partyName}}
+         div(data-row-span='4')
+              div(data-field-span='3')
+                label Payment Details
+                label(ng-if="receipt.type == 'Maintenance Payment'") {{receipt.type}} for {{receipt.period}}
+                label(ng-if="receipt.type == 'Clubhouse Rental'") {{receipt.type}} for event on {{receipt.eventDate | date:'dd-MM-yyyy'}}
+                label(ng-if="receipt.type == 'Tenant Administration Fees'") {{receipt.type}} for period {{receipt.tenantFromDate}} to {{receipt.tenantToDate}}
+              div(data-field-span='1')
+                label Amount
+                label {{receipt.amount | currency : "&#8377;"}}
+         div(data-row-span='2')
+              div(data-field-span='1')
+                label Mode of Payment
+                label {{receipt.mode}}
+              div(data-field-span='1')
+                label Name of the Bank
+                label {{receipt.bank}}
+         div(data-row-span='4')
+              div(data-field-span='4')
+                label Transaction details
+                label(ng-if="receipt.mode == 'Check'") Check Number - {{receipt.checkNumber}} dated {{receipt.checkDate | date:'dd-MM-yyyy'}}
+                label(ng-if="receipt.mode == 'Online Transfer'") Account Number - {{receipt.acctNumber}} on {{receipt.checkDate | date:'dd-MM-yyyy'}}

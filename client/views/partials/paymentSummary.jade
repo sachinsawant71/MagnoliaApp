@@ -1,0 +1,16 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Maintenance Payment Summary
+.modal-body
+  div
+  div
+                      p
+                         | Send maintenance payment summary to all members.
+                      .header
+                         small.text-muted
+                            span.glyphicon.glyphicon-time
+                            | &nbsp;&nbsp;Last reminder was sent 6 months ago
+.modal-footer
+    div
+      button.btn.btn-primary(ng-click='ok()') Send Summary
+      button.btn.btn-warning(ng-click='cancel()') Cancel

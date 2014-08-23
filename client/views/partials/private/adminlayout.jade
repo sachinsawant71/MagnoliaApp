@@ -1,0 +1,39 @@
+div(data-ng-controller='NavCtrl')
+  .container
+    .row
+      .col-12
+        .navbar.navbar-default(role="navigation")
+           #navbarCollapse(class="collapse navbar-collapse navbar-default")
+              ul.nav.navbar-nav
+                  li
+                     a(href="/admin/dashboard",active-nav, data-access-level='accessLevels.admin')
+                        i.fa.fa-home
+                        | Home
+                  li
+                     a(href="/admin/apartments",active-nav, data-access-level='accessLevels.admin')
+                        i.fa.fa-cogs
+                        | Apartments
+                  li
+                     a(href="/admin/receipts",active-nav, data-access-level='accessLevels.admin') 
+                        i.fa.fa-ticket
+                        | Receipts
+                  li
+                     a(href="/admin/payments",active-nav, data-access-level='accessLevels.admin')
+                        i.fa.fa-money
+                        | Payments
+                  li
+                     a(href="/admin/contracts",active-nav, data-access-level='accessLevels.admin' )
+                        i.fa.fa-suitcase
+                        | Vendors
+                  li
+                     a(href="/admin/members",active-nav, data-access-level='accessLevels.admin' )
+                        i.fa.fa-group
+                        | Members
+                  li
+                     a(href="/admin/documents",active-nav, data-access-level='accessLevels.admin')
+                        i.fa.fa-archive
+                        | Documents
+
+.container
+    .row
+       .col-md-12(data-ui-view)

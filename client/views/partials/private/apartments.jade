@@ -1,0 +1,68 @@
+p Apartments Management
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="query", placeholder="Search Apartment")
+               span#search-icon.glyphicon.glyphicon-search
+               label#filter-label Additional filters:
+               select.form-control(placeholder="Add-on Apartment", ng-model="filterdata")
+                        option(value='') All
+                        option(value='kyc-done') KYC-Complted
+                        option(value='kyc-pending') KYC-Pending
+                        option(value='owner') Occupancy-Owned
+                        option(value='tenant') Occupancy-Tenant
+                        option(value='empty') Occupancy-Empty
+                        option(value='defaulter') Maintenance-Defaulter
+          form.navbar-form.navbar-right(role="search")
+        h5 Filtered list has {{filtered.length}} items status {{currentApartment.status}} aptNo {{currentApartment.flatnumber}}
+        table.table.table-condensed
+           tbody
+              tr
+                  th
+                      a(href='', ng-click='predicateBlueChip = natural("flatnumber")') Flat No.
+                  th Sellable Area
+                  th Occupancy Status
+                  th KYC Status
+                  th Owner's Name
+                  th.amount
+                       a(href='', ng-click='predicateBlueChip = sortAmoutFunction') Total Dues
+                  th.action Details
+                  th.action Mail
+                  th.action Receipt
+               tr(ng-class='{true:"active",false:""}[active.flatnumber == item.flatnumber]', ng-repeat='item in filtered = (items | filter:query | filter:addFilter |orderBy:predicateBlueChip)', ng-click='toggleItem(item)')
+                  td {{item.flatnumber}}
+                  td {{item.sellableArea}}
+                  td
+                     span.label.label-default(ng-show='item.status == "0"') Empty
+                     span.label.label-success(ng-show='item.status == "1"') Owner
+                     span.label.label-warning(ng-show='item.status == "2"') Tenant
+                  td(class='gaskyc{{item.gasKYC}}')
+                  td {{item.ownerName}}
+                  td(ng-class='getClassNameForAmount(item)')
+                      | {{(item.maintenanceDueTotal- item.maintenancePaidTotal)  | currency : "&#8377;"}}
+                  td.action(ng-controller="ModalNewApartmentCtrl")
+                        a(href="",ng-click="open(item)")
+                              i.fa.fa-paperclip
+                  td.action(ng-controller="ModalEmailCtrl")
+                        a(href="" ng-click="open(item)")
+                              i.fa.fa-envelope
+                  td.action(ng-controller="ModalReceiptCtrl")
+                        a(href="", ng-click="open(item,$index)")
+                              i.fa.fa-pencil-square
+        script#newApartmentModal(type="text/ng-template")
+             ng-include(src="'/partials/apartmentDataModal.jade'")
+        script#receiptModal(type="text/ng-template")
+             ng-include(src="'/partials/receiptModal.jade'")
+        script#receiptConfirmationModal(type="text/ng-template")
+             ng-include(src="'/partials/receiptConfirmationModal.jade'")
+        script#newPeriodModal(type="text/ng-template")
+             ng-include(src="'/partials/newPeriodModal.jade'")
+        script#newEmailModal(type="text/ng-template")
+             ng-include(src="'/partials/newEmailModal.jade'")
+        script#maintenanceReminderModal(type="text/ng-template")
+             ng-include(src="'/partials/paymentReminder.jade'")
+        script#maintenanceSummaryModal(type="text/ng-template")
+             ng-include(src="'/partials/paymentSummary.jade'")
+        script#newEmailModal(type="text/ng-template")
+             ng-include(src="'/partials/newEmailModal.jade'")

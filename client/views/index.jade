@@ -1,0 +1,116 @@
+doctype html
+html(lang='en', data-ng-app='magnoliaApp')
+    head
+        meta(charset='utf-8')
+        title Magnolia Apartment Management Application
+        link(href="/components/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
+        link(href="/components/font-awesome/css/font-awesome.min.css", rel="stylesheet")
+        link(rel='stylesheet', href='/css/loginstyle.css')
+        link(rel='stylesheet', href='/css/app.css')
+        link(rel='stylesheet', href='/css/gridforms.css')
+        link(rel='icon',type='image/png',href='/favicon-16x16.png',sizes='16x16')
+        link(rel='icon',type='image/png',href='/favicon-32x32.png',sizes='32x32')
+
+        // This is needed because Facebook login redirects add #_=_ at the end of the URL
+        script(type="text/javascript").
+            if (window.location.href.indexOf('#_=_') > 0) {
+                window.location = window.location.href.replace(/#.*/, '');
+            }
+    body(data-ng-cloak)
+
+
+        .navbar(data-ng-controller="NavCtrl", style="background-color: lightslategrey;border-radius:0;")
+            .navbar-inner
+                .container-fluid
+                        a(href="#" class="brand")
+                             img(src="/img/logo.png")
+                        div#userInfo.pull-right(data-access-level='accessLevels.user')                             
+                            | Welcome&nbsp;
+                            strong {{ user.username }}&nbsp;&nbsp;                           
+                            span(id="logout")
+                                a(href="", data-ng-click="logout()")
+                                   span(class="label label-warning")  Log out
+        #maincontent.container(data-ui-view)
+
+
+        #alertBox.alert.alert-danger(data-ng-show="error")
+            button(type="button", class="close", data-ng-click="error = null;") &times;
+            strong Error!&nbsp;&nbsp;
+            span(data-ng-bind="error")
+    
+        #footer.navbar-fixed-bottom
+           .navbar-inner
+             .container-fluid
+               | Copyright &copy;2014&nbsp;&nbsp;
+               #contactInfo.pull-right
+                      | Contact:&nbsp;&nbsp; 
+                      i.fa.fa-phone +91-8087648884&nbsp;&nbsp;&nbsp;&nbsp;
+                      i.fa.fa-envelope &nbsp;&nbsp;
+                      span#email
+                         a(href="mailto:magnolia.pashan@gmail.com") Mail
+        script(src='/components/underscore/underscore-min.js')
+        script(src='/components/es5-shim/es5-shim.min.js')
+        script(src='/components/jquery/jquery.min.js')
+        script(src='/components/angular/angular.min.js')
+        script(src='/components/angular-cookies/angular-cookies.min.js')
+        script(src='/components/angular-ui-router/release/angular-ui-router.min.js')
+        script(src='/components/bootstrap/dist/js/bootstrap.min.js')
+        script(src='/components/angular-bootstrap/ui-bootstrap.min.js')
+        script(src='/components/angular-bootstrap/ui-bootstrap-tpls.min.js')
+        script(src='/components/angular-resource/angular-resource.min.js')
+        script(src='/components/naturalSortVersion.min.js')
+        script(src='/components/tinymce.min.js')
+        script(src='/components/tinymce-angular.js')
+        script(src='/components/ui-bootstrap-alerts/ui-bootstrap-alerts.min.js')
+        script(src='/components/angular-file-upload/angular-file-upload.min.js')       
+        script(src='/components/angular-ui-utils/ui-utils.js')
+        script(src='/components/angular-wizard/dist/angular-wizard.js')
+        script(src='/components/textAngular/dist/textAngular-sanitize.min.js')
+        script(src='/components/textAngular/dist/textAngular.min.js')
+        script(src='/components/ng-csv/build/ng-csv.min.js')
+        script(src='/components/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js')
+
+        script(src='/js/routingConfig.js')
+        script(src='/js/app.js')
+        script(src='/js/services.js')
+        script(src='/js/controllers.js')
+        script(src='/js/filters.js')
+        script(src='/js/directives.js')
+
+        // Partial views... Load up front to make transitions smoother
+        script(type="text/ng-template", id="404")
+            include partials/404
+        script(type="text/ng-template", id="admin")
+            include partials/admin
+        script(type="text/ng-template", id="home")
+            include partials/home
+        script(type="text/ng-template", id="login")
+            include partials/login
+        script(type="text/ng-template", id="private/userlayout")
+            include partials/private/userlayout
+        script(type="text/ng-template", id="private/userpayments")
+            include partials/private/userpayments
+        script(type="text/ng-template", id="private/userdetails")
+            include partials/private/userdetails
+        script(type="text/ng-template", id="private/userrequests")
+            include partials/private/userrequests
+        script(type="text/ng-template", id="register")
+            include partials/register
+        script(type="text/ng-template", id="private/adminlayout")
+            include partials/private/adminlayout
+        script(type="text/ng-template", id="private/apartments")
+            include partials/private/apartments
+        script(type="text/ng-template", id="private/payments")
+            include partials/private/payments
+        script(type="text/ng-template", id="private/contracts")
+            include partials/private/contracts
+        script(type="text/ng-template", id="private/documents")
+            include partials/private/documents
+        script(type="text/ng-template", id="private/receipts")
+            include partials/private/receipts
+        script(type="text/ng-template", id="private/members")
+            include partials/private/members
+        script(type="text/ng-template", id="private/aptrulebook")
+            include partials/private/aptrulebook
+        script(type="text/ng-template", id="private/dashboard")
+            include partials/private/dashboard

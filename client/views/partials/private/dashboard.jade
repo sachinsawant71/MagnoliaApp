@@ -1,0 +1,122 @@
+.container-fluid
+    .row
+       .col-md-8
+          .container-fluid
+             .row
+                  .panel.panel-default
+                     .panel-heading
+                         h3.panel-title
+                             i.fa.fa-key
+                             | &nbsp;&nbsp;Common Actions
+                     .panel-body
+                         section#quickLinks.features.section
+                               div.row
+                                  div.item.col-md-3.col-sm-6.col-xs-12.text-center(ng-controller="ModalNewPeriodCtrl")
+                                     a(href="" ng-click="open()")
+                                        div.icon.animated.fadeInUp.delayp1
+                                          i.fa.fa-chain     
+                                     div.content
+                                        p Add New Period
+                                  div.item.col-md-3.col-sm-6.col-xs-12.text-center(ng-controller="ModalMaintenanceReminderCtrl")
+                                     a(href="" ng-click="open()")
+                                        div.icon.animated.fadeInUp.delayp1
+                                          i.fa.fa-bell       
+                                     div.content
+                                       p Payment Reminder
+                                  div.item.col-md-3.col-sm-6.col-xs-12.text-center(ng-controller="ModalPaymentSummaryCtrl")
+                                     a(href="" ng-click="open()")
+                                        div.icon.animated.fadeInUp.delayp1
+                                          i.fa.fa-file       
+                                     div.content
+                                        p Payment Summary
+                                  div.item.col-md-3.col-sm-6.col-xs-12.text-center(ng-controller="ModalEmailCtrl")
+                                     a(href="" ng-click="open()")
+                                        div.icon.animated.fadeInUp.delayp1
+                                          i.fa.fa-envelope       
+                                     div.content
+                                        p Email All members
+             .row
+                  .panel.panel-default
+                      .panel-heading
+                          h3.panel-title 
+                             i.fa.fa-money
+                             |  &nbsp;&nbsp;Maintenance Collection Summary
+                      .panel-body
+                        .pad
+                          .clearfix
+                               a(href='', ng-click='open("all")')
+                                    span.pull-left.strong Maintenance Collection-Total  
+                          .progress.xs
+                              .progress-bar.progress-bar-light-blue(style='width: {{aptSummary.percentageReceived | percentage}};') {{aptSummary.percentageReceived | percentage}}
+                           div(ng-repeat='periodData in aptSummary.periodData')
+                             .clearfix
+                                  a(href='', ng-click='open(periodData.periodName)')
+                                      span.pull-left Period - {{periodData.periodName}}
+                             .progress.xs
+                                  .progress-bar.progress-bar-info(style='width: {{periodData.periodPrctReceived | percentage }};') {{periodData.periodPrctReceived | percentage }}
+       .col-md-4
+          .container-fluid
+             .row
+                  .panel.panel-default
+                      .panel-heading
+                           h3.panel-title
+                               i.fa.fa-briefcase
+                               |  &nbsp;&nbsp;Summary Data
+                      .panel-body
+                           ul.list-group.list-group-flush
+                              li.list-group-item
+                                  | Total Apartments 
+                                  span.pull-right {{aptSummary.totalApartments }}
+                              li.list-group-item
+                                  | Occupancy
+                                  span.pull-right {{aptSummary.occupancyCount/aptSummary.totalApartments | percentage}}
+                              li.list-group-item
+                                  | Gas KYC Status
+                                  span.pull-right {{aptSummary.gasKycCount/aptSummary.totalApartments | percentage}}
+                              li.list-group-item
+                                  | Total Tenants
+                                  span.pull-right {{aptSummary.tenantCount }}
+                              li.list-group-item
+                                  | Total Receivables
+                                  span.pull-right {{aptSummary.totalMaintenaceReceivable - aptSummary.totalMaintenacePaid | currency : "&#8377;" }}
+             .row
+                  .panel.panel-default
+                      .panel-heading
+                           h3.panel-title
+                               i.fa.fa-clock-o
+                               |  &nbsp;&nbsp;Activity Data
+                      .panel-body
+                           .list-group
+                               a.list-group-item(href='#')
+                                  span.badge 4 new
+                                  i.fa.fa-envelope
+                                  | &nbsp;&nbsp;Emails
+                               a.list-group-item(href='#')
+                                  span.badge 2
+                                  i.fa.fa-bolt
+                                  | &nbsp;&nbsp;Contracts/AMC Renewal 
+                               a.list-group-item(href='#')
+                                  span.badge 4 new items
+                                  i.fa.fa-truck
+                                  | &nbsp;&nbsp;19 Pending Taks
+                               a.list-group-item(href='#')
+                                  span.badge 10 Pending
+                                  i.fa.fa-users
+                                  | &nbsp;&nbsp;Tenant Registration
+        script#newApartmentModal(type="text/ng-template")
+             ng-include(src="'/partials/apartmentDataModal.jade'")
+        script#receiptModal(type="text/ng-template")
+             ng-include(src="'/partials/receiptModal.jade'")
+        script#receiptConfirmationModal(type="text/ng-template")
+             ng-include(src="'/partials/receiptConfirmationModal.jade'")
+        script#newPeriodModal(type="text/ng-template")
+             ng-include(src="'/partials/newPeriodModal.jade'")
+        script#newEmailModal(type="text/ng-template")
+             ng-include(src="'/partials/newEmailModal.jade'")
+        script#maintenanceReminderModal(type="text/ng-template")
+             ng-include(src="'/partials/paymentReminder.jade'")
+        script#maintenanceSummaryModal(type="text/ng-template")
+             ng-include(src="'/partials/paymentSummary.jade'")
+        script#periodSummaryModal(type="text/ng-template")
+             ng-include(src="'/partials/periodSummary.jade'")
+

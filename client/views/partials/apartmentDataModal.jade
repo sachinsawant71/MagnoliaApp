@@ -1,0 +1,349 @@
+.modal-header
+  button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+  h4 Details for {{currentApartment.flatnumber}}  
+.modal-body
+  tabset
+    tab.tabStyle(heading='Apartment Details')
+      div
+        form.form-horizontal.modal-form
+          fieldset
+            .form-group
+              label.col-md-4.control-label Apartment Number:
+              label.col-md-4.control-label.leftAligned {{currentApartment.flatnumber}}
+            .form-group
+              label.col-md-4.control-label(for='salablearea') Saleable Area:
+              .col-md-4
+                .input-group
+                  input#salablearea.form-control(ng-model='currentApartment.sellableArea', disabled='true', name='SalableArea', placeholder='Salable Area', type='text')
+                  span.input-group-addon Square Feet
+            .form-group
+              label.col-md-4.control-label(for='buildUpArea') Built-up Area:
+              .col-md-4
+                .input-group
+                  input#buildUpArea.form-control(ng-model='currentApartment.buildupArea', disabled='true', name='BuiltupArea', placeholder='Builtup Area', type='text')
+                  span.input-group-addon Square Feet
+            .form-group
+              label.col-md-4.control-label(for='carpetArea') Carpet Area:
+              .col-md-4
+                .input-group
+                  input#carpetArea.form-control(ng-model='currentApartment.carpetArea', disabled='true', name='CarperArea', placeholder='Carpet Area', type='text')
+                  span.input-group-addon Square Feet
+            .form-group
+              label.col-md-4.control-label(for='terraceArea') Terrace Area:
+              .col-md-4
+                .input-group
+                  input#terraceArea.form-control(ng-model='currentApartment.terraceArea', disabled='true', name='TerraceArea', placeholder='Terrace Area', type='text')
+                  span.input-group-addon Square Feet
+            .form-group
+              label.col-md-4.control-label(for='votingRights') Voting Rights:
+              .col-md-2
+                .input-group
+                  input#votingRights.form-control(ng-model='currentApartment.votingRights', disabled='true', name='VotingRights', placeholder='Voting Rights', type='text')
+                  span.input-group-addon %
+            .form-group
+              label.col-md-4.control-label(for='propertyTaxId') Property Tax Id:
+              .col-md-6
+                input#propertyTaxId.form-control.input-large(ng-model='currentApartment.propertyTax', disabled='true',name='propertyTaxId', placeholder='PMC property Tax ID', type='text')
+            .form-group
+              label.col-md-4.control-label(for='status') Status
+              .col-md-4
+                  label.radio-inline
+                       input#status-0(name='status', ng-model='currentApartment.status', value='0', checked='checked', type='radio')
+                       | Empty
+                  label.radio-inline
+                       input#status-1(name='status', ng-model='currentApartment.status', ng-click='resetTenantAddress()', value='1', type='radio')
+                       | Occupied
+                  label.radio-inline
+                       input#status-2(name='status', ng-model='currentApartment.status', ng-click='resetTenantAddress()', value='2', type='radio')
+                       | Rented
+            .form-group
+               label.col-md-4.control-label(for='kyc') Gas KYC
+               .col-md-4
+                  label.radio-inline
+                       input#kyc-0(name='kyc', ng-model='currentApartment.gasKYC', value='1', checked='checked', type='radio')
+                       | Completed
+                  label.radio-inline
+                       input#kyc-1(name='kyc', ng-model='currentApartment.gasKYC', value='0', type='radio')
+                       | Pending
+    tab.tabStyle(heading='Owner"s Details')
+      form.form-horizontal.modal-form
+        fieldset
+          .form-group
+            label.col-md-4.control-label(for='onwername') Name
+            .col-md-6
+              input#onwername.form-control.input-xlarge(name='textinput', ng-model='currentApartment.owner.name', placeholder='Owner Name', type='text')
+          accordion(close-others='true')
+            accordion-group.acc(is-open='true')
+              accordion-heading
+                | Contact Information
+                i.pull-right.glyphicon(ng-class='{"glyphicon-chevron-down": isopen, "glyphicon-chevron-up": !isopen}')
+              .form-group
+                label.col-md-4.control-label(for='address') Address
+                .col-md-6
+                  textarea#address.form-control(style='width: 275px; height: 100px;', ng-disabled='currentApartment.status=="1"', ng-model='currentApartment.owner.address', name='textarea') Owner's Address
+              div
+                ul.nav.nav-tabs
+                  li
+                    a(href='#a', data-toggle='tab') Email
+                  li
+                    a(href='#b', data-toggle='tab') Phone
+                .tab-content.contact-data
+                  #a.tab-pane.active.bkwhite
+                    .form-group
+                      label.col-md-4.control-label(for='email1') Primary Email-ID
+                      .col-md-7
+                        input#email1.form-control.input-xlarge(name='email1', ng-model='currentApartment.owner.emails[0]', placeholder='Email ID', type='text')
+                    .form-group
+                      label.col-md-4.control-label(for='email2') Secondary  Email-ID
+                      .col-md-7
+                        input#email2.form-control.input-xlarge(name='email2', ng-model='currentApartment.owner.emails[1]', placeholder='Second Emai ID', type='text')
+                  #b.tab-pane.bkwhite
+                    .form-group
+                      label.col-md-4.control-label(for='phone1') Primary Phone No.
+                      .col-md-6
+                        input#phone1.form-control.input-xlarge(name='phone1', ng-model='currentApartment.owner.phones[0]', placeholder='Phone Number', type='text')
+                    .form-group
+                      label.col-md-4.control-label(for='phone2') Secondary Phone No.
+                      .col-md-6
+                        input#phone2.form-control.input-xlarge(name='phone2', ng-model='currentApartment.owner.phones[1]', placeholder='Second Phone', type='text')
+            accordion-group.acc(heading='Co-Owner Information')
+              .form-group
+                label.col-md-4.control-label(for='coownername') Co Owner Name
+                .col-md-6
+                  input#coownername.form-control.input-xlarge(name='textinput', ng-model='currentApartment.owner.coowner.name', placeholder='Co-Owner Name', type='text')
+              .form-group
+                label.col-md-4.control-label(for='coowneremail') Email ID
+                .col-md-6
+                  input#coowneremail.form-control.input-xlarge(name='textinput', ng-model='currentApartment.owner.coowner.email', placeholder='Email ID', type='text')
+              .form-group
+                label.col-md-4.control-label(for='coownerphone') Contact Number
+                .col-md-6
+                  input#coownerphone.form-control.input-xlarge(name='textinput', ng-model='currentApartment.owner.coowner.phone', placeholder='Phone Number', type='text')
+            accordion-group.acc(heading='Vehicle Data ({{currentApartment.owner.vehicles.length}})')
+              .form-group
+              div#inline-form
+                .col-md-2
+                   label.control-label Vehicle Info:
+                .col-md-4
+                  input#vehicleNo.form-control(type='text', placeholder='Registration Number',ng-model='vehicle.vehicleNo',capitalize='')
+                .col-md-4
+                  label.radio-inline(for='status-0')
+                     input#status-0(name='status', ng-model='vehicle.vehicleType', value='0', checked='checked', type='radio')
+                     | 4 Wheel
+                  label.radio-inline(for='status-1')
+                     input#status-1(name='status', ng-model='vehicle.vehicleType', value='1', type='radio')
+                     | 2 Wheel
+                 .col-md-2
+                     button.btn.btn-primary(ng-disabled="vehicle.vehicleNo ==''", ng-click="addVehicleOwner()")
+                        i.fa.fa-plus
+                        | &nbsp;Add
+              div
+                table.table.table-condensed 
+                  tbody.contact-data
+                    tr(ng:repeat='veh in currentApartment.owner.vehicles')
+                      td
+                        | {{veh.vehicleNo}} - (
+                        span(ng-if='veh.vehicleType == "0"') 4-Wheeler)
+                        span(ng-if='veh.vehicleType == "1"') 2-Wheeler)
+                      td
+                        button.btn.btn-danger.btn-xs(type='submit', ng-click='deleteVehicleOwner(veh)')
+                          i.glyphicon.glyphicon-remove
+                          | &nbsp;Delete
+    tab.tabStyle(heading='Payments')
+      section#filters.bkwhite.contact-data
+        table.table.table-border.table-condensed
+          tbody
+            tr
+              th Maintenance Period
+              th.amount Amount Receivable
+              th.amount Amount Paid
+            tr(ng-repeat='payment in currentApartment.maintenanceDetails.paymentSummary')
+              td 
+                 a.info(href="#") 
+                     | {{payment.period}}
+                     span.ttip
+                          span(class="findata" ng-repeat='note in payment.notes')
+                             | {{note}} <br/>
+              td.amount {{payment.maintenanceDue | currency : "&#8377;"}}
+              td.amount {{payment.maintenancePaid | currency : "&#8377;"}}
+            tr#highlight
+              td.bold Total
+              td.amount.bold {{currentApartment.maintenanceDetails.maintenanceDueTotal | currency : "&#8377;"}}
+              td.amount.bold {{currentApartment.maintenanceDetails.maintenancePaidTotal| currency : "&#8377;"}}
+        h4(ng-class='getClassName()')
+          | Total Dues = {{(currentApartment.maintenanceDetails.maintenanceDueTotal- currentApartment.maintenanceDetails.maintenancePaidTotal)  | currency : "&#8377;"}}
+        button.btn.btn-success.btn-xm(print-div,print-element='printDiv',print-title='Payment Summary for {{currentApartment.flatnumber}}') 
+           i.glyphicon.glyphicon-pushpin
+           | &nbsp;&nbsp;Print Statement
+
+    tab.tabStyle(heading='Tenant"s Details', disabled='currentApartment.status!="2"')
+      form.form-horizontal.modal-form
+        fieldset
+          .form-group
+            label.col-md-4.control-label(for='tenantname') Name
+            .col-md-6
+              input#tenantname.form-control.input-xlarge(name='textinput', ng-model='currentApartment.tenant.name', placeholder='Tenant"s Name', type='text')
+          accordion(close-others='true')
+            accordion-group.acc(heading='Contact Information', is-open='true')
+              .form-group
+                label.col-md-4.control-label(for='tenantaddress') Permanant Address
+                .col-md-6
+                  textarea#tenantaddress(style='width: 275px; height: 100px;', ng-model='currentApartment.tenant.address', placeholder='Tenant"s Permanant Address', name='textarea')
+              .form-group
+                label.col-md-4.control-label(for='email1') EMail
+                .col-md-6
+                  input#email1.form-control.input-xlarge(name='email1', ng-model='currentApartment.tenant.emails[0]', placeholder='Email Id', type='text')
+              .form-group
+                label.col-md-4.control-label(for='phone1') Contact Nos.
+                .col-md-6
+                    input#phone1.form-control.input-medium(name='phone1', ng-model='currentApartment.tenant.phones[0]', placeholder='Primary Phone Number', type='text')
+                .col-md-6.col-md-offset-4
+                    input#phone2.form-control.input-medium(name='phone1', ng-model='currentApartment.tenant.phones[1]', placeholder='Secondary Phone Number', type='text')
+            accordion-group.acc(heading='Contract Information')
+              .form-group
+                label.col-md-4.control-label(for='prependedtext') Contract Period
+                .col-md-8
+                    .input-group
+                        span.input-group-addon From
+                        input#fromDate.form-control.input-medium(ng-model='currentApartment.tenantFromDate', name='fromDate', placeholder='', type='text')
+                        span.input-group-addon To
+                        input#toDate.form-control.input-medium(ng-model='currentApartment.tenantToDate', name='toDate', placeholder='', type='text')
+              .form-group
+                label.col-md-4.control-label(for='checkboxes') Check-in formalities
+                .col-md-6
+                  label.checkbox(for='checkboxes-0')
+                    input#checkboxes-0(type='checkbox', name='checkboxes', ng-model='currentApartment.tenant.policeverification', value='Police Verification')
+                    | Police Verification
+                  label.checkbox(for='checkboxes-1')
+                    input#checkboxes-1(type='checkbox', name='checkboxes', ng-model='currentApartment.tenant.agreement', value='Tenant Agreement')
+                    | Tenant Agreement
+                  label.checkbox(for='checkboxes-2')
+                    input#checkboxes-2(type='checkbox', name='checkboxes', ng-model='currentApartment.tenant.registration', value='Registration')
+                    | Tenant Administration Fees
+            accordion-group.acc(heading='Vehicle Data ({{currentApartment.tenant.vehicles.length}})')
+              .form-group
+              div#vehicle-data
+                .col-md-2
+                   label.control-label Vehicle Info:
+                .col-md-4
+                  input#vehicleNo.form-control(type='text', placeholder='Registration Number',ng-model='vehicle.vehicleNo',capitalize='')
+                .col-md-4
+                  label.radio-inline(for='status-0')
+                     input#status-0(name='status', ng-model='vehicle.vehicleType', value='0', checked='checked', type='radio')
+                     | 4 Wheel
+                  label.radio-inline(for='status-1')
+                     input#status-1(name='status', ng-model='vehicle.vehicleType', value='1', type='radio')
+                     | 2 Wheel
+                 .col-md-2
+                     button.btn.btn-primary(ng-disabled="vehicle.vehicleNo ==''", ng-click="addVehicleTenant()")
+                        i.fa.fa-plus
+                        | &nbsp;Add
+              div
+                table.table.table-condensed 
+                  tbody.contact-data
+                    tr(ng:repeat='veh in currentApartment.tenant.vehicles')
+                      td
+                        | {{veh.vehicleNo}} - (
+                        span(ng-if='veh.vehicleType == "0"') 4-Wheeler)
+                        span(ng-if='veh.vehicleType == "1"') 2-Wheeler)
+                      td
+                        button.btn.btn-danger.btn-xs(type='submit', ng-click='deleteVehicleTenant(veh)')
+                          i.glyphicon.glyphicon-remove
+                          | &nbsp;Delete
+
+    tab.tabStyle(heading='Documents')
+      form.form-horizontal.modal-form
+        .form-group.form-group-lg
+           div#document-data
+                .col-sm-1
+                    .fileUpload.btn.btn-primary(style="top: -10px;",ng-disabled="uploader.queue.length > 0")
+                          span.glyphicon.glyphicon-plus
+                          | &nbsp;Add
+                          input.upload(nv-file-select='', uploader="uploader", type='file')
+                .col-sm-4
+                     label.control-label(ng-if='uploader.queue.length > 0', style="margin-left: 20px;") Document Description:                
+                .col-sm-5
+                     input#docDesc.form-control(type='text', ng-if='uploader.queue.length > 0', placeholder='Document Description',ng-model='doc.documentDescription')
+                 .col-sm-2
+                         button.btn.btn-success(style="margin-right:5px;", ng-if='uploader.queue.length > 0', ng-disabled="uploader.queue.length == 0", ng-click="uploader.queue[0].upload()")
+                            i.glyphicon.glyphicon-upload
+                         button.btn.btn-danger(ng-if='uploader.queue.length > 0', ng-disabled="uploader.queue.length == 0", ng-click="uploader.queue[0].remove()")
+                            i.glyphicon.glyphicon-remove
+      div(ng-if='currentApartment.documents.length > 0')
+                table.table.table-condensed 
+                  tbody.contact-data
+                    tr
+                      th Document Description
+                      th Created Date
+                      th Action
+                    tr(ng:repeat='doc in currentApartment.documents')
+                      td
+                        | {{doc.documentDescription}}
+                      td
+                        | {{doc.createdDate | date:'dd-MM-yyyy'}}
+                      td
+                        button.btn.btn-sucess.btn-xs(type='submit',style="margin-right:5px;", ng-click='getDoc(doc)')
+                          i.fa.fa-paperclip
+                        button.btn.btn-danger.btn-xs(type='submit', ng-click='removeDocument(doc)')
+                          i.fa.fa-trash-o
+      div(ng-if='currentApartment.documents.length == 0')
+            table.table.table-condensed 
+                  tbody.contact-data
+                    tr
+                      td
+                        | No uploaded files
+
+.modal-footer
+  button.btn.btn-primary(ng-click='ok()') Save
+  button.btn.btn-warning(ng-click='cancel()') Cancel
+.printable
+    #printDiv
+        img#printlogo(style='margin-left:100px;' alt='Client Logo', title='Client Logo', src='/img/printlogo.png')
+        form.grid-form
+          fieldset
+            legend
+            div(data-row-span='4')
+              div(data-field-span='3')
+                label
+                label
+              div(data-field-span='1')
+                label Date
+                label {{todayDate | date:'dd-MM-yyyy' }}
+            div(data-row-span='8')
+              div(data-field-span='1')
+                label
+                label
+              div(data-field-span='3')
+                label Owner's Name
+                label {{currentApartment.owner.name}}
+              div(data-field-span='2')
+                label Apartment Number
+                label {{currentApartment.flatnumber}}
+              div(data-field-span='2')
+                label Saleable Area
+                label {{currentApartment.sellableArea}}
+        aside
+          h1(style="margin-top:20px;")
+            | Maintenance Payment Details
+        form.grid-form
+          fieldset
+            div(data-row-span='12')
+              div(data-field-span='1')
+                h4   
+              div(data-field-span='5')
+                h4 Period
+              div(data-field-span='2')
+                h4 Amount Due
+              div(data-field-span='2')
+                h4 Amount Paid
+            div(data-row-span='12' style='{border-bottom:0px;}')(ng-repeat='payment in currentApartment.maintenanceDetails.paymentSummary')
+              div(data-field-span='1')
+                label
+              div(data-field-span='5')
+                label {{payment.period}}
+                lable(style="font-size: 10px;", ng-repeat='note in payment.notes')
+                    | {{note}} <br/>
+              div(data-field-span='2')
+                label {{payment.maintenanceDue | currency : "&#8377;"}}
+              div(data-field-span='2')
+                label {{payment.maintenancePaid | currency : "&#8377;"}}

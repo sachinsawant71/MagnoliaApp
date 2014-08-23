@@ -1,0 +1,42 @@
+p Payments Module
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="query", placeholder="Search Payments")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.btn-group.navbar-right
+                  button.btn.btn-warning(type='button', ng-click="open()",ng-controller='ModalNewPaymentCtrl')
+                            span.glyphicon.glyphicon-plus
+                            |&nbsp;New Payment
+        table.table.table-condensed
+          tbody
+             tr
+                th Voucher No.
+                th Date
+                th Payment Description
+                th Amount
+                th Approved By
+                th.action Details
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in filteredPayments | filter:query')
+                td {{$index +1}}
+                td {{item.date | date:'dd-MM-yyyy'}}
+                td {{getPaymentDesc(item)}}
+                     span(ng-show='item.paymentType == "Vendor Payment"') {{item.paymentType}}-{{item.vendorName}}
+                     span(ng-show='item.paymentType != "Vendor Payment"') {{item.paymentType}}
+                td {{item.amount | currency : "&#8377;"}}
+                td {{item.authorizedBy}}
+                td.action(ng-controller='ModalPaymentReconcileCtrl')
+                   a(href='', ng-click='open(null,$index,item)')
+                      i.glyphicon.glyphicon-wrench
+                td.action
+                   a(href='', ng-click='removePayment($index,item)')
+                      i.glyphicon.glyphicon-remove
+        div.col-md-12
+            pagination(direction-links="true" boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="entryLimit" on-select-page="refreshGrid(page)")
+        script#newPaymentModal(type="text/ng-template")
+             ng-include(src="'/partials/newPaymentModal.jade'")
+        script#paymentReconcileModal(type="text/ng-template")
+             ng-include(src="'/partials/paymentReconcileModal.jade'")

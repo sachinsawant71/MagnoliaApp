@@ -1,0 +1,92 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;     
+     h4 Vendor Information
+.modal-body
+  tabset
+    tab.tabStyle(heading='Vendor Details')
+         form.form-horizontal.modal-form(name='vendorDetailsForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='vendorName') Vendor Name
+                  .col-md-6
+                      input#vendorName.form-control.input-xlarge(ng-model='item.vendorName',disabled='true',name='vendorName',placeholder='Vendor Name',type='text')
+               .form-group
+                  label.col-md-4.control-label(for='vendorArea') Category
+                  .col-md-4
+                      input#vendorArea.form-control.input-xlarge(ng-model='item.area', name='vendorArea',disabled='true',placeholder='Vendor Name',type='text', typeahead='area for area in areas | filter:$viewValue | limitTo:8')
+               .form-group(ng-class="{'has-error': vendorDetailsForm.area.$invalid}")
+                  label.col-md-4.control-label(for='address') Address
+                  .col-md-4
+                      textarea#address.form-control(style='width: 275px; height: 100px;', ng-model='item.address',placeholder='Address', name='address')
+               .form-group(ng-class="{'has-error': vendorDetailsForm.contactNumber.$invalid}")
+                  label.col-md-4.control-label(for='contactNumber') Contact Number
+                  .col-md-4
+                      input#contactNumber.form-control(ng-model='item.contactNumber', placeholder='Contact Number',numbers-only='numbers-only',name='contactNumber')
+               .form-group
+                  label.col-md-4.control-label(for='tin') TIN
+                  .col-md-4
+                      input#tin.form-control.input-large(ng-model='item.tin', name='tin',disabled='true',capitalize='',placeholder='Tax ID Number',type='text')
+               .form-group
+                  label.col-md-4.control-label(for='pan') PAN
+                  .col-md-4
+                      input#pan.form-control.input-large(ng-model='item.pan', name='pan',disabled='true', capitalize='',placeholder='PAN',type='text')
+               .form-group
+                  label.col-md-4.control-label(for='status') Status
+                  .col-md-4
+                     .radio
+                        label(for='status-0')
+                           input#status-0(name='status', ng-model='item.active', value='0', checked='checked', type='radio')
+                           | In-Active
+                     .radio
+                        label(for='status-1')
+                           input#status-1(name='status', ng-model='item.active', value='1', type='radio')
+                           | Active
+               .form-group(ng-if='item.referencedbyName')
+                  label.col-md-4.control-label(for='referencedBy') Referenced By
+                  .col-md-7
+                      div.row
+                          .col-md-6
+                               input#referencedBy.form-control.input-xlarge(ng-model='item.referencedbyName',disabled='true',name='referencedbyName',required='',type='text')
+                          .col-md-6
+                               input#referencedBy.form-control.input-medium(ng-model='item.referencedbyNumber',disabled='true',name='referencedbyNumber',required='',type='text')
+    tab.tabStyle(heading='Contact Details')
+         form.form-inline.modal-form(name='contactForm',role='form',novalidate='')
+             .form-group
+                  label.sr-only(for='contactName') Contact
+                  input#contactName.form-control(ng-model='contact.name',type='text', placeholder='Contact Name',required='')
+             .form-group
+                  label.sr-only(for='contactName') Designation
+                  input#designation.form-control(ng-model='contact.designation',type='text', placeholder='Designation',required='')
+             .form-group
+                  label.sr-only(for='phoneNumber') Phone
+                  input#phoneNumber.form-control(ng-model='contact.phone',numbers-only='numbers-only', placeholder='Phone Number')
+             .form-group(ng-class="{ 'has-error' : contactForm.emailId.$invalid && !contactForm.emailId.$pristine }")
+                  label.sr-only(for='emailId') Email
+                  input#emailId.form-control(ng-model='contact.email',type='email', placeholder='Email ID',name='emailId')
+             button.btn.btn-primary(ng-disabled='contactForm.$invalid',style='margin-top: 10px;',ng-click='addContact()')
+                        i.fa.fa-plus
+                        | &nbsp;Add 
+         div(ng-show='item.contacts.length > 0')
+          table.table.table-condensed(style='margin-top: 25px;')
+            tbody
+              tr
+                th Sr. No.
+                th Contact Name
+                th Designation
+                th Phone Number
+                th Email-id
+                th Delete
+             tr(ng-class='', ng-repeat='contact in item.contacts')
+                td {{$index +1}}
+                td {{contact.contactName}}
+                td {{contact.contactDesignation}}
+                td {{contact.contactPhone}}
+                td {{contact.contactEmail}}
+                td
+                   button.btn.btn-danger.btn-xs(type='submit', ng-click='deleteContact(contact)')
+                      i.glyphicon.glyphicon-remove
+                      | &nbsp;Delete
+ .modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='vendorDetailsForm.$invalid', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel

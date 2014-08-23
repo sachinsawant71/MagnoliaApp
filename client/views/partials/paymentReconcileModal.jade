@@ -1,0 +1,36 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Payment Details
+.modal-body
+    table.table.table-bordered
+       tbody
+          tr
+               td Payment Date
+               td {{item.date | date:'dd-MM-yyyy'}}
+          tr(ng-show='item.paymentType == "Vendor Payment"')
+               td Vendor Name
+               td {{item.vendorName}}
+          tr(ng-show='item.paymentType == "Vendor Payment"')
+               td Invoice Number
+               td {{item.invoiceNumber}}
+          tr
+               td Payment Desciption
+               td {{item.desciption}}
+          tr
+               td Payment Type
+               td {{item.paymentType}}
+          tr
+               td Authorized By
+               td {{item.authorizedBy}}
+          tr
+               td Amount
+               td {{item.amount | currency : "&#8377;"}}
+          tr
+               td Mode of Payment
+               td {{item.mode}}          
+          tr(ng-show='item.mode == "Check"')
+               td Check Number
+               td {{item.checkNumber}}
+
+.modal-footer
+      button.btn.btn-warning(ng-click='cancel()') Cancel

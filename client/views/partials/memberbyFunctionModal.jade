@@ -1,0 +1,17 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Member list by Functional Area
+.modal-body
+    table.table.table-bordered
+       tbody 
+          tr
+               th Maintenance Function name
+               th Primary Contact
+               th Secondary Contact
+          tr(ng-repeat='area in assignedfunctionAreas')
+               td {{area.name}}
+               td {{area.primaryOwner.memberName}}  
+               td {{area.secondaryOwner.memberName}}  
+.modal-footer
+    div      
+      button.btn.btn-warning(ng-click='cancel()') Cancel

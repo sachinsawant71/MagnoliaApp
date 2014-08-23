@@ -1,0 +1,24 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4
+       i.fa.fa-envelope
+       |  Send Email
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='emailForm', novalidate='')
+            .form-group
+                label.col-sm-2.control-label(for='mailTo') Email To
+                .col-sm-4
+                     select.form-control(name='mailTo', ng-model='mail.emailTo')
+                       option All Flat Owners
+                       option All Residents
+                       option All Tenants
+            .form-group
+                label.col-sm-2.control-label(for='subject') Subject
+                .col-md-8
+                  input#subject.form-control.input-xlarge(name='email1', ng-model='mail.emailSubject', placeholder='Subject', ng-required='true', type='text')
+            div(text-angular="" ta-toolbar="[['h1','h2','h3'],['bold','italics','underline','ul','ol'],['undo','redo'	],['justifyLeft','justifyCenter','justifyRight']]" ng-required='true' ng-model="mail.emailcontent")
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!emailForm.$valid', ng-click='ok()') Send Email
+      button.btn.btn-warning(ng-click='cancel()') Cancel

@@ -1,0 +1,35 @@
+p Documents module
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="query", placeholder="Search Documents")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.btn-group.navbar-right
+                  button.btn.btn-warning(type='button', ng-click="open()")
+                            span.glyphicon.glyphicon-upload
+                            |&nbsp;Upload Files
+
+        table.table.table-condensed
+           tbody
+              tr
+                  th Document Name                      
+                  th Description
+                  th Access Level
+                  th.action Action
+                  th.action Delete
+               tr(ng-repeat='item in items')
+                  td {{item.documentName}}
+                  td {{item.documentDescription}}
+                  td {{item.accessLevel}} 
+                  td.action
+                        a(href="", target="_blank", ng-click='getDoc(item)')
+                              i.fa.fa-paperclip
+                  td.action
+                        a(href='', ng-click='removeDocument(item)')
+                              i.fa.fa-trash-o
+        div.col-md-12
+            pagination(direction-links="true" boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="entryLimit" on-select-page="refreshGrid(page)")
+        script#documentUploadModal(type="text/ng-template")
+             ng-include(src="'/partials/documentUploadModal.jade'")

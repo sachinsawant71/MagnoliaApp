@@ -1,0 +1,110 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 Member's Contribution - Apartment {{item.flatnumber}}
+.modal-body
+  form.form-horizontal.modal-form(name='receiptForm', novalidate='')
+    fieldset
+      .form-group
+        label.col-md-4.control-label(for='aptnumber') Apartment Number
+        .col-md-6
+          input#aptnumber.form-control.input-xlarge(ng-model='item.flatnumber', name='textinput', disabled='true', type='text')
+      .form-group
+        label.col-md-4.control-label(for='ownersname') Party's Name
+        .col-md-6
+          input#ownersname.form-control.input-xlarge(name='textinput', ng-model='receipt.partyName', disabled='true', type='text')
+      .form-group(ng-if='!readonly && flatStatus==2')
+         label.col-md-4.control-label(for='residentStatus') Resident status
+         .col-md-6
+           label.radio-inline
+               input#inlineRadio1(type='radio', ng-model='receipt.residentStatus', name='residentStatus', ng-change='changeResidentStatus()' ,value='1')
+               | Owner
+           label.radio-inline
+               input#inlineRadio2(type='radio', ng-model='receipt.residentStatus', name='residentStatus', ng-change='changeResidentStatus()' ,value='2')
+               | Tenant
+      .form-group
+        label.col-md-4.control-label(for='selectbasic') Receipts Type
+        .col-md-6
+          select#selectbasic.form-control.input-xlarge(ng-disabled='readonly', name='selectbasic', ng-model='receipt.type')
+            option(ng-if='receipt.residentStatus != 2', value='Maintenance Payment') Maintenance Payment
+            option(value='Clubhouse Rental') Clubhouse Rental
+            option(ng-if='item.status == 2', value='Tenant Administration Fees') Tenant Administration Fees
+      div(ng-show='!!receipt.type')
+        div(ng-show='receipt.type == "Maintenance Payment"')
+          .form-group
+            label.col-md-4.control-label(for='period') Maintenance Period
+            .col-md-6
+              select#period.form-control.input-xlarge(ng-disabled='readonly', ng-model='receipt.period', ng-options="period for period in periods" , name='period')
+        div(ng-show='receipt.type == "Clubhouse Rental"')
+          .form-group
+            label.col-md-4.control-label(for='eventDate') Event Date
+            .col-md-6
+              div(ng-if='readonly')
+                    input.form-control.input-large(type='text', ng-model='receipt.eventDate',ng-disabled='readonly')
+              div(ng-if='!readonly')
+                    input.form-control.iconCalendar(type='eventDate', ng-model='receipt.eventDate', datepicker-popup='dd-MM-yyyy', show-weeks='false', show-button-bar='false', min='01-01-2014')
+        div(ng-show='receipt.type == "Tenant Administration Fees"')
+          .form-group
+            label.col-md-4.control-label(for='prependedtext') Period
+            .col-md-6
+              .input-group
+                span.input-group-addon From
+                input#fromDate.input-medium(ng-model='receipt.tenantFromDate', name='fromDate', placeholder='', type='text')
+              .input-group
+                span.input-group-addon To
+                input#toDate.input-medium(ng-model='receipt.tenantToDate', name='toDate', placeholder='', type='text')
+        .form-group
+          label.col-md-4.control-label(for='amout') Amount
+          .col-md-4
+            .input-group
+              span.input-group-addon &#8377;
+              input#amout.form-control.input-large(ng-model='receipt.amount', money='', ng-disabled='readonly', name='amout', type='text', placeholder='', ng-required='true')
+        .form-group
+          label.col-md-4.control-label(for='selectbasic') Payment Mode
+          .col-md-6
+            select#receiptMode.form-control.input-xlarge(name='receiptMode', ng-disabled='readonly', ng-model='receipt.mode')
+              option(value='Check') Check
+              option(value='Online Transfer') Online Transfer
+        div(ng-show='receipt.mode == "Check"')
+          .form-group
+            label.col-md-4.control-label(for='checkno') Check Number
+            .col-md-4
+              input#checkno.form-control.input-xlarge(ng-model='receipt.checkNumber', ng-disabled='readonly', name='checkno', type='text', placeholder='')
+          .form-group
+            label.col-md-4.control-label(for='bankname') Bank Name
+            .col-md-4
+              input#bankname.form-control.input-xlarge(ng-model='receipt.bank', name='bankname', ng-disabled='readonly', type='text', typeahead='bank for bank in banks | filter:$viewValue | limitTo:8')
+          .form-group
+            label.col-md-4.control-label(for='checkDate') Date
+            .col-md-4
+              div(ng-if='readonly')
+                    input.form-control.input-large(type='text', ng-model='receipt.checkDate',ng-disabled='readonly')
+              div(ng-if='!readonly')
+                    input.form-control.iconCalendar(type='checkDate', ng-model='receipt.checkDate', ng-disabled='readonly', datepicker-popup='dd-MM-yyyy', min='22-10-2009')
+          .form-group
+            label.col-md-4.control-label(for='textarea') Notes
+            .col-md-6
+              textarea#notes.form-control(ng-model='receipt.notes', ng-disabled='readonly', name='notes', rows='4', cols='150') additional notes
+        div(ng-show='receipt.mode == "Online Transfer"')
+          .form-group
+            label.col-md-4.control-label(for='acctNo') Account Number
+            .col-md-6
+              input#acctNo.form-control.input-xlarge(ng-model='receipt.acctNumber', ng-disabled='readonly', name='acctNo', type='text', placeholder='')
+          .form-group
+            label.col-md-4.control-label(for='bankname') Bank Name
+            .col-md-6
+              input#bankname.form-control.input-xlarge(ng-model='receipt.bank', name='bankname', ng-disabled='readonly', type='text', typeahead='bank for bank in banks | filter:$viewValue | limitTo:8')
+          .form-group
+            label.col-md-4.control-label(for='checkDate') Date
+            .col-md-6
+                input.form-control.form-control.iconCalendar(type='checkDate', ng-model='receipt.checkDate', datepicker-popup='dd-MM-yyyy', min='22-10-2009')
+          .form-group
+            label.col-md-4.control-label(for='textarea') Notes
+            .col-md-6
+              textarea#notes.form-control(ng-model='receipt.notes', name='notes', rows='4', cols='150') additional notes
+.modal-footer
+    div(ng-show='!readonly')
+      button.btn.btn-primary(ng-disabled='!receiptForm.$valid', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel
+    div(ng-show='readonly')
+      button.btn.btn-primary(ng-click='ok()') Email Statement
+      button.btn.btn-warning(ng-click='cancel()') Cancel

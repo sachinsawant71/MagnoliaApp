@@ -1,0 +1,56 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 New Payment Voucher
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='vendorForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='paymentType') Payment Type
+                  .col-md-4
+                      select#paymentType.form-control.input-xlarge(ng-model="item.paymentType" ng-options="paymentType for paymentType in paymentTypes | filter:$viewValue")
+               div(ng-show='item.paymentType == "Vendor Payment"')
+                 .form-group
+                    label.col-md-4.control-label(for='vendorName') Vendor Name
+                    .col-md-6
+                        select#vendorName.form-control.input-xlarge(ng-model="item.vendorName" ng-options="vendor.vendorName as vendor.vendorName for vendor in vendors")
+               div(ng-show='item.paymentType == "Vendor Payment"')
+                 .form-group
+                    label.col-md-4.control-label(for='vendorName') Invoice Number
+                    .col-md-4
+                        input#invoiceNumber.form-control.input-large(ng-model="item.invoiceNumber" name='textinput',placeholder='Invoice Number', type='text')
+               .form-group
+                  label.col-md-4.control-label(for='address') Description
+                  .col-md-6
+                      textarea#desciption.form-control(style='width: 400px; height: 75px;', ng-model='item.description', required='',placeholder='Description', name='textarea')
+               .form-group
+                  label.col-md-4.control-label(for='authorizedBy') Authorized By
+                  .col-md-6
+                      select#authorizedBy.form-control.input-xlarge(ng-model="item.authorizedBy" ng-options="member.memberName as member.memberName for member in members")
+               .form-group
+                  label.col-md-4.control-label(for='paymentMode') Payment Mode
+                  .col-md-4
+                      select#paymentMode.form-control.input-xlarge(name='paymentMode', ng-disabled='readonly', ng-model='item.mode')
+                          option(value='Check') Check
+                          option(value='Cash') Cash
+               .form-group
+                  label.col-md-4.control-label(for='paymentAmount') Amount
+                  .col-md-4
+                      .input-group
+                         span.input-group-addon &#8377;
+                         input#paymentAmount.form-control.input-xlarge(ng-model='item.paymentAmount', money='', name='textinput',placeholder='Amount',required='', type='text')
+               div(ng-show='item.mode == "Check"')
+                  .form-group
+                     label.col-md-4.control-label(for='checkno') Check Number
+                     .col-md-4
+                         input#checkno.form-control.input-xlarge(ng-model='item.checkNumber', ng-disabled='readonly', name='checkno', type='text', placeholder='')
+                  .form-group
+                     label.col-md-4.control-label(for='checkDate') Date
+                     .col-md-4
+                         input.form-control.iconCalendar(type='checkDate', ng-model='item.checkDate', datepicker-popup='dd-MM-yyyy', min='22-10-2009')
+
+
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!vendorForm.$valid', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel

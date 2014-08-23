@@ -1,0 +1,51 @@
+p Committee Members Module
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="query", placeholder="Search Members")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.navbar-right
+                  button.btn.btn-default(style="margin-right:5px;",type='button', ng-click="open()",ng-controller='ModalMemberByFunctionCtrl')
+                            i.fa.fa-eye
+                            |&nbsp;Functional View
+                  button.btn.btn-warning(type='button', ng-click="open()",ng-controller='NewMemberModalCtrl')
+                            span.glyphicon.glyphicon-plus
+                            |&nbsp;New Member
+        table.table.table-condensed
+          tbody
+             tr
+                th Flat No
+                th Member Name
+                th Phone Number
+                th Function Areas
+                th Status
+                th.action Details
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in members | filter:query')
+                td {{item.flatNo}}
+                td {{item.memberName}}
+                td {{item.contactNumber}}
+                td 
+                    div(ng-repeat='area in item.functionAreas')
+                         span.label.label-success(ng-show='area.ownership == "1"') {{area.name}}
+                         span.label.label-warning(ng-show='area.ownership == "0"') {{area.name}}
+                td 
+                    span.label.label-success(ng-show='item.active == "1"') Active
+                    span.label.label-warning(ng-show='item.active == "0"') In-Active
+                td.action(ng-controller='ModalMemberCtrl')
+                   a(href='', ng-click='open(null,$index,item)')
+                      i.glyphicon.glyphicon-wrench
+                td.action
+                   a(href='', ng-click='removeMember($index,item)')
+                      i.glyphicon.glyphicon-remove
+
+        script#newMemberModal(type="text/ng-template")
+             ng-include(src="'/partials/newMemberModal.jade'")
+
+        script#memberModal(type="text/ng-template")
+             ng-include(src="'/partials/memberModal.jade'")
+
+        script#memberbyFunctionModal(type="text/ng-template")
+             ng-include(src="'/partials/memberbyFunctionModal.jade'")

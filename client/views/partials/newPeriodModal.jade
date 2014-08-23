@@ -1,0 +1,31 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 New Maintenance Period
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='periodForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='period') Period Start
+                  .col-md-4
+                      input.form-control.iconCalendar(type='periodStartDate', ng-model='item.period.start', datepicker-options='dateOptions', ng-required='true', datepicker-popup='MMMM-yyyy')
+               .form-group
+                  label.col-md-4.control-label(for='period') Period End
+                  .col-md-4
+                      input.form-control.iconCalendar(type='periodEndDate', ng-model='item.period.end', datepicker-options='dateOptions', ng-required='true', datepicker-popup='MMMM-yyyy')
+               div(ng-if='item.period.end && item.period.start')
+                 .form-group
+                    label.col-md-4.control-label(for='period') Period Duration
+                    .col-md-4
+                         p.form-control-static {{getPeriod()}} Months
+               .form-group
+                  label.col-md-4.control-label(for='amout') Maintenance Rate
+                  .col-md-4
+                     .input-group
+                        span.input-group-addon &#8377;
+                        input#amout.form-control.input-medium(ng-model='item.period.rate', money='', name='amout', type='text', placeholder='', ng-required='true')
+                        span.input-group-addon Per Sqaure feet
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!periodForm.$valid', ng-click='ok()') Create Period
+      button.btn.btn-warning(ng-click='cancel()') Cancel

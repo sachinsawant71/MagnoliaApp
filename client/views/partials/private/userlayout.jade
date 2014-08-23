@@ -1,0 +1,19 @@
+div(data-ng-controller='NavCtrl')
+  .container
+    .row
+      .col-12
+        .navbar.navbar-default(role="navigation")
+           #navbarCollapse(class="collapse navbar-collapse navbar-default")
+              ul.nav.navbar-nav
+                  li
+                     a(href="/user/details",active-nav,data-access-level='accessLevels.user') Member Details
+                  li
+                     a(href="/user/payments",active-nav, data-access-level='accessLevels.user') Payment Summary
+                  li
+                     a(href="/user/requests",active-nav,data-access-level='accessLevels.user') Requests
+                  li
+                     a(href="/user/rulebook",active-nav,data-access-level='accessLevels.user') Guide Book
+
+  .container
+    .row
+       .col-md-12(data-ui-view)
