@@ -102,6 +102,13 @@ angular.module('magnoliaApp')
 });
 
 angular.module('magnoliaApp')
+.factory('AMC', function ($resource) {
+    return $resource('/api/amc/:id', {}, { "update": {
+            method: 'PUT'
+        }});
+});
+
+angular.module('magnoliaApp')
     .factory('printer', ['$rootScope', '$compile', '$http', '$timeout', function ($rootScope, $compile, $http, $timeout) {
         var printHtml = function (html) {
             var hiddenFrame = $('<iframe style="display: none"></iframe>').appendTo('body')[0];

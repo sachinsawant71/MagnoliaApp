@@ -1,4 +1,6 @@
-p Vendor module
+tabset
+    tab(heading='Vendors')
+      p(style="margin-top:10px;") Vendor Management
         alerts
         .navbar.navbar-default
           form.navbar-form.navbar-left(role="search")
@@ -36,9 +38,53 @@ p Vendor module
                       i.glyphicon.glyphicon-remove
         div.col-md-12
             pagination(direction-links="true" boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="entryLimit" on-select-page="refreshGrid(page)")
+    tab(heading='AMCs')
+        p(style="margin-top:10px;") Annual Maintenance Contracts
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="query", placeholder="Search AMCs")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.btn-group.navbar-right
+                  button.btn.btn-warning(type='button', ng-click="open()",ng-controller='NewAMCModalCtrl')
+                            span.glyphicon.glyphicon-plus
+                            |&nbsp;New AMC
+        table.table.table-condensed
+          tbody
+             tr
+                th Sr. No.
+                th Vendor Name
+                th Start Date
+                th End Date
+                th Status
+                th.action Details
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in filteredAmc | filter:query')
+                td {{$index +1}}
+                td {{item.vendorName}}
+                td {{item.startDate | date:'dd-MM-yyyy'}}
+                td {{item.endDate | date:'dd-MM-yyyy' }}
+                td 
+                    span.label.label-danger
+                          span.glyphicon.glyphicon-thumbs-down
+                          | &nbsp;Expired
+                td.action(ng-controller='ModalAmcCtrl')
+                   a(href='', ng-click='open(null,$index,item)')
+                      i.glyphicon.glyphicon-wrench
+                td.action
+                   a(href='', ng-click='removeAmc($index,item)')
+                      i.glyphicon.glyphicon-remove
+        div.col-md-12
+            pagination(direction-links="true" boundary-links="true" total-items="totalAmcItems" page="currentPage" items-per-page="entryLimit" on-select-page="refreshAmcGrid(page)")
 
         script#newVendorModal(type="text/ng-template")
              ng-include(src="'/partials/newVendorModal.jade'")
-
+        script#newAMCModal(type="text/ng-template")
+             ng-include(src="'/partials/newAMCModal.jade'")
         script#vendorModal(type="text/ng-template")
              ng-include(src="'/partials/vendorModal.jade'")
+        script#amcModal(type="text/ng-template")
+             ng-include(src="'/partials/amcModal.jade'")
+

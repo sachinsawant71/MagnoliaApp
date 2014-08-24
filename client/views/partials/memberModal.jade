@@ -27,7 +27,15 @@
                   label.col-md-4.control-label(for='emailId') Email Id
                   .col-md-4
                       input#emailId.form-control(ng-model='item.emailId', ng-disabled='true', placeholder='Email Id',required='', name='text')
-
+               .form-group
+                  label.col-md-4.control-label(for='status') Status
+                  .col-md-4
+                       label.radio-inline
+                             input#status-1(name='status', ng-model='item.active', value='1',type='radio')
+                             | Active
+                       label.radio-inline
+                             input#status-0(name='status', ng-model='item.active', value='0',type='radio')
+                             | In-Active
          .panel.panel-default
                   .panel-heading
                          h3.panel-title

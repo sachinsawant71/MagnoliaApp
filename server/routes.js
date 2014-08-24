@@ -9,6 +9,7 @@ var _ =           require('underscore')
 	, VendorCtrl  =  require('./controllers/vendor')
 	, UploadCtrl  =  require('./controllers/upload')
 	, MemberCtrl  =  require('./controllers/member')
+	, AmcCtrl  =  require('./controllers/amc')
 	, FuntionalAreaCtrl =  require('./controllers/functionalArea')
     , User =      require('./models/User.js')
     , userRoles = require('../client/js/routingConfig').userRoles
@@ -246,6 +247,30 @@ var routes = [
         path: '/api/members/:id',
         httpMethod: 'PUT', 
         middleware: [MemberCtrl.update],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/amc',
+        httpMethod: 'GET',
+        middleware: [AmcCtrl.findAll],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/amc',
+        httpMethod: 'POST', 
+        middleware: [AmcCtrl.add],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/amc/:id',
+        httpMethod: 'GET', 
+        middleware: [AmcCtrl.findById],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/amc/:id',
+        httpMethod: 'DELETE', 
+        middleware: [AmcCtrl.delete],
         accessLevel: accessLevels.admin
     },
     {

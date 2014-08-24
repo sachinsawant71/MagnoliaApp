@@ -305,6 +305,8 @@ angular.module('magnoliaApp')
 		item.formData[0].documentName = $scope.doc.documentName;
 		item.formData[0].documentDescription = $scope.doc.documentDescription;
 		item.formData[0].accessLevel = 'Admin';
+		item.formData[0].flatnumber = $scope.currentApartment.flatnumber
+
   };
 
   $scope.getDoc = function(item) {
@@ -813,9 +815,9 @@ angular.module('magnoliaApp')
 
 
 angular.module('magnoliaApp')
-.controller('VendorCtrl',['$scope','Vendors',function($scope,Vendors) {
+.controller('VendorCtrl',['$scope','Vendors','AMC',function($scope,Vendors,AMC) {
 
-	  $scope.filteredReceipts = [];
+	  $scope.filteredVendors = [];
 	  $scope.currentPage = 1; 
       $scope.entryLimit = 10; 
 
@@ -838,8 +840,26 @@ angular.module('magnoliaApp')
 	  };
 
 
-	  $scope.filterResult = function() {
-			console.log($scope.filterCriteria);
+	  $scope.filteredAmc = [];
+	  $scope.amcCurrentPage = 1; 
+
+	  $scope.refreshAmcGrid = function(page) {
+		    var begin = ((page - 1) * $scope.entryLimit);
+		    AMC.query({offset: begin, limit: $scope.entryLimit},function(data, headers) {
+				  $scope.amcCurrentPage = page; 
+				  $scope.amc = data;
+				  $scope.filteredAmc = data;;
+				  $scope.totalAmcItems =  headers('record-count');
+			});
+	  }	  
+
+	  $scope.refreshAmcGrid($scope.amcCurrentPage);
+	  
+	  $scope.removeAmc = function (index,amc) {
+		    console.log('In delete');
+			AMC.remove({id: amc._id}, function() {
+				$scope.refreshAmcGrid($scope.amcCurrentPage);
+		  });
 	  };
 
 
@@ -940,7 +960,7 @@ angular.module('magnoliaApp')
 		});
 
 		modalInstance.result.then(function (vendor) {
-			    $scope.vendors.push(vendor);
+			    $scope.refreshGrid($scope.currentPage);
 				}, function () {
 				console.log("canceled");
 		});
@@ -2098,5 +2118,146 @@ angular.module('magnoliaApp')
 			console.log("canceled");
 		});
 	};
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('NewAMCModalCtrl',['$scope','$modal','$log','Vendors',function($scope,$modal,$log,Vendors) {
+
+	$scope.open = function () {
+		var modalInstance = $modal.open({
+		  templateUrl: 'newAMCModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'NewAMCModalInstanceCtrl',
+		  resolve: {
+				items: function () {
+				  return $scope;
+				}
+			  }
+		});
+
+		modalInstance.result.then(function (amc) {
+			    $scope.refreshAmcGrid($scope.amcCurrentPage);
+				}, function () {
+				console.log("canceled");
+		});
+  };
+}]);
+
+angular.module('magnoliaApp')
+.controller('NewAMCModalInstanceCtrl',['$scope','$modalInstance','$filter','Vendors','FileUploader',function($scope,$modalInstance,$filter,Vendors,FileUploader) {
+
+  
+  $scope.item = {};
+  $scope.areas =  ['House Keeping','Electrical Maintenance','Security','STP','WTP','Gardening','Raw Material','Cooking Gas','Legal','Accounting','Utility Provider'];
+
+  $scope.getPeridoDuration = function() {
+		var year1 = $scope.item.amcStartDate.getFullYear();
+		var year2 = $scope.item.amcEndDate.getFullYear();
+		var month1 = $scope.item.amcStartDate.getMonth();
+		var month2 = $scope.item.amcEndDate.getMonth();
+		if(month1===0){ 
+		  month1++;
+		  month2++;
+		}
+		var periodLength = (year2-year1)*12+(month2-(month1-1)); 	
+		return periodLength;
+  }
+
+  $scope.contractDocs = [];
+
+  var uploader = $scope.uploader = new FileUploader({
+            scope: $scope,        
+            url: '/api/amc',
+			removeAfterUpload: true,
+            formData: [
+                { 
+				  vendorName : $scope.item.vendorName,
+				  startDate : new Date($scope.item.amcStartDate),
+				  endDate : new Date($scope.item.amcEndDate),
+				  cost : $scope.item.amcAmount,
+		          documentName : 'Vendor Contract',
+		          documentDescription : $scope.item.vendorName,
+		          accessLevel : 'Admin',
+		          flatnumber: '*'		
+				}
+            ]
+  });
+
+  uploader.onAfterAddingFile = function(fileItem) {
+	     $scope.contractDocs.push(fileItem.file.name);
+  };
+
+  uploader.onBeforeUploadItem = function(item) {
+
+        var startDate = $filter('date')($scope.item.amcStartDate, "MM/yyyy");
+		var endDate = $filter('date')($scope.item.amcEndDate, "MM/yyyy");
+
+	    item.formData[0].vendorName = $scope.item.vendorName;
+		item.formData[0].startDate = new Date($scope.item.amcStartDate);
+		item.formData[0].endDate = new Date($scope.item.amcEndDate);
+		item.formData[0].cost = $scope.item.amcAmount;
+		item.formData[0].documentName = 'Vendor Contract';
+		item.formData[0].documentDescription = $scope.item.vendorName + '(' + startDate + ' to ' + endDate + ')';
+		item.formData[0].accessLevel = 'Admin';
+		item.formData[0].flatnumber = '-';
+  };
+
+  $scope.ok = function () {	
+	  uploader.uploadAll();
+	  $modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+  $scope.isInvalid = function () {
+	   return (!$scope.contact.name || 0 === $scope.contact.name.length);
+  }
+
+}]);
+
+angular.module('magnoliaApp')
+.controller('ModalAmcCtrl',['$scope','$modal','$log',function($scope, $modal, $log) {
+
+	$scope.open = function (item,index) {
+		$scope.active = item;
+		var modalInstance = $modal.open({
+		  templateUrl: 'amcModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'ModalInstanceAmcCtrl',
+		  windowClass : 'modal-huge',
+		  resolve: {
+			item: function () {
+			  return item;
+			}
+		  }
+		});
+
+		modalInstance.result.then(function (selectedItem) {}, function () {
+				console.log("amc updated");
+				}, function () {
+				console.log("canceled");
+		});
+	};
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ModalInstanceAmcCtrl',['$scope','$modalInstance','AlertService',function($scope,$modalInstance,AlertService) {
+
+  $scope.ok = function () {	
+		$modalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
 
 }]);

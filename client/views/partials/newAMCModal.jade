@@ -1,0 +1,63 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 New Annual Maintenance Contract
+.modal-body
+  div
+       form.form-horizontal.modal-form(name='amcForm', novalidate='')
+          fieldset
+             .form-group
+                  label.col-md-4.control-label(for='amount') Vendor Name:
+                  .col-md-6
+                        select#vendorName.form-control.input-xlarge(ng-model="item.vendorName" ng-options="vendor.vendorName as vendor.vendorName for vendor in vendors")
+             .form-group
+                  label.col-md-4.control-label(for='startDate')  Contract Start Date:
+                  .col-md-3
+                    input.form-control.iconCalendar(type='startDate', ng-model='item.amcStartDate', datepicker-popup='dd-MM-yyyy', show-weeks='false', show-button-bar='false', min='01-01-2014')
+             .form-group
+                  label.col-md-4.control-label(for='endDate') Contract End Date:
+                  .col-md-3
+                    input.form-control.iconCalendar(type='endDate', ng-model='item.amcEndDate', datepicker-popup='dd-MM-yyyy', show-weeks='false', show-button-bar='false', min='01-01-2014')
+             div(ng-if='item.amcStartDate && item.amcEndDate')
+                 .form-group
+                    label.col-md-4.control-label(for='period') Period Duration:
+                    .col-md-4
+                         p.form-control-static {{getPeridoDuration()}} Months
+             .form-group
+                  label.col-md-4.control-label(for='amount') Contract Cost:
+                  .col-md-4
+                     .input-group
+                         span.input-group-addon &#8377;
+                         input#amout.form-control.input-large(ng-model='item.amcAmount', money='',name='amout', type='text', placeholder='', ng-required='true')
+             .form-group
+                  label.col-md-4.control-label(for='amount') Contract Details
+                  .fileUpload.btn.btn-primary(style="top: -10px;",ng-disabled="uploader.queue.length > 0")
+                          span.glyphicon.glyphicon-plus
+                          | &nbsp;Contract Document
+                          input.upload(nv-file-select='', uploader="uploader", type='file')
+             .form-group
+                  lable.col-md-4 {{}}
+                  .col-md-6
+                      div(ng-if='uploader.queue.length > 0')
+                          table.table.table-condensed 
+                               tbody.contact-data
+                                 tr
+                                    th Document Name
+                                    th Action
+                                 tr(ng:repeat='doc in uploader.queue')
+                                    td
+                                      | {{doc.file.name}}
+                                    td
+                                      button.btn.btn-danger.btn-xs(type='button', ng-click='doc.remove()')
+                                        span.glyphicon.glyphicon-trash
+                                        | &nbsp;&nbsp;Remove
+                      div(ng-if='uploader.queue.length == 0')
+                          table.table.table-condensed 
+                              tbody.contact-data
+                                 tr
+                                  td
+                                    | No documents added
+
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!amcForm.$valid && uploader.queue.length == 0', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel
