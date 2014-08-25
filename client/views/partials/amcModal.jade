@@ -18,9 +18,19 @@
                   .col-md-3
                         p.form-control-static {{item.endDate | date:'dd-MM-yyyy' }}
              .form-group
+                  label.col-md-4.control-label Duration:
+                  .col-md-3
+                        p.form-control-static {{getPeridoDuration()}} Months 
+             .form-group
                   label.col-md-4.control-label(for='amount') Contract Cost:
                   .col-md-4
                         p.form-control-static &#8377; {{item.cost}}
+             .form-group
+                  label.col-md-4.control-label Contract Document:
+                  .col-md-4
+                       p.form-control-static
+                         a(href='', ng-click='getContractDoc(item)')
+                             {{item.contractDoc.documentName}}
 .modal-footer
     div
       button.btn.btn-warning(ng-click='cancel()') Cancel

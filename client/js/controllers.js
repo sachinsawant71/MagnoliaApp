@@ -854,9 +854,19 @@ angular.module('magnoliaApp')
 	  }	  
 
 	  $scope.refreshAmcGrid($scope.amcCurrentPage);
+
+	  var today = new Date();
+
+	  $scope.isActive = function (amc) {
+		  var amcEndDate = new Date(amc.endDate);
+		  if ( amcEndDate > today) {
+			 return true;
+		  } else {
+			 return false;
+		  }		  
+	  };
 	  
 	  $scope.removeAmc = function (index,amc) {
-		    console.log('In delete');
 			AMC.remove({id: amc._id}, function() {
 				$scope.refreshAmcGrid($scope.amcCurrentPage);
 		  });

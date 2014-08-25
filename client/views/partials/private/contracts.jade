@@ -67,9 +67,12 @@ tabset
                 td {{item.startDate | date:'dd-MM-yyyy'}}
                 td {{item.endDate | date:'dd-MM-yyyy' }}
                 td 
-                    span.label.label-danger
+                    span.label.label-danger(ng-if='!isActive(item)')
                           span.glyphicon.glyphicon-thumbs-down
                           | &nbsp;Expired
+                    span.label.label-success(ng-if='isActive(item)')
+                          span.glyphicon.glyphicon-thumbs-up
+                          | &nbsp;Active
                 td.action(ng-controller='ModalAmcCtrl')
                    a(href='', ng-click='open(null,$index,item)')
                       i.glyphicon.glyphicon-wrench
