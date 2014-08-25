@@ -169,4 +169,4 @@ pip-log.txt
 ###########
 *.env
 client/components
-public
+public/uploads

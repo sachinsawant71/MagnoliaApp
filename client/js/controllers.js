@@ -2259,7 +2259,11 @@ angular.module('magnoliaApp')
 
 
 angular.module('magnoliaApp')
-.controller('ModalInstanceAmcCtrl',['$scope','$modalInstance','AlertService',function($scope,$modalInstance,AlertService) {
+.controller('ModalInstanceAmcCtrl',['$scope','$modalInstance','$window',function($scope,$modalInstance,$window) {
+
+  $scope.getDoc = function(item) {
+	   $window.open("/api/documents/" + item._id);	
+  }
 
   $scope.ok = function () {	
 		$modalInstance.close();
