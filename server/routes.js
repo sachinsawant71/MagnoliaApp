@@ -280,9 +280,27 @@ var routes = [
         accessLevel: accessLevels.admin
     },
     {
+        path: '/api/functionalareas',
+        httpMethod: 'POST', 
+        middleware: [FuntionalAreaCtrl.add],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/functionalareas/:id',
+        httpMethod: 'GET', 
+        middleware: [FuntionalAreaCtrl.findById],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/functionalareas/:id',
+        httpMethod: 'DELETE', 
+        middleware: [FuntionalAreaCtrl.delete],
+        accessLevel: accessLevels.admin
+    },
+    {
         path: '/*',
         httpMethod: 'GET',
-        middleware: [function(req, res) {
+        middleware: [function(req, res) {   
             var role = userRoles.public, username = '';
             if(req.user) {
                 role = req.user.role;

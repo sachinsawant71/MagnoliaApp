@@ -109,6 +109,13 @@ angular.module('magnoliaApp')
 });
 
 angular.module('magnoliaApp')
+.factory('FunctionalAreas', function ($resource) {
+    return $resource('/api/functionalareas/:id', {}, { "update": {
+            method: 'PUT'
+        }});
+});
+
+angular.module('magnoliaApp')
     .factory('printer', ['$rootScope', '$compile', '$http', '$timeout', function ($rootScope, $compile, $http, $timeout) {
         var printHtml = function (html) {
             var hiddenFrame = $('<iframe style="display: none"></iframe>').appendTo('body')[0];

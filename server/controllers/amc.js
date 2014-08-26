@@ -8,38 +8,15 @@ var documentProvider = new DocumentProvider('localhost', 27017);
 
 module.exports = {
     add: function(req, res) {
-		var doc = {};
-		doc.documentName = req.body.documentName;
-		doc.documentDescription = req.body.documentDescription;
-		doc.accessLevel = req.body.accessLevel;
-		doc.flatnumber = req.body.flatnumber;
-		doc.createdTimestamp = new Date();
-		doc.filename = req.files.file.name;
-		documentProvider.add(doc, function(error, savedDoc) {
-		  if (error) {
-			res.send(error, 500);
-		  } else {		   
-				var amc = {};
-				amc.vendorName = req.body.vendorName;
-				amc.startDate = new Date(req.body.startDate);
-				amc.endDate = new Date(req.body.endDate);
-				amc.cost = req.body.cost;
-				amc.contractDoc = {
-					 documentId : savedDoc._id,
-			         documentName : savedDoc.documentName,
-			         createdDate : savedDoc.createdTimestamp,
-			         documentDescription : savedDoc.documentDescription
-				}
-				amcProvider.add(amc, function(error, savedDoc) {
-					  if (error) {
-						 res.send(error, 500);
-					  } else {	
-						 res.send(amc);
-					  }
-				});
+			var amc = req.body;
+			amcProvider.add(amc, function(error, newAmc) {
+			  if (error) {
+					res.send(error, 500);
+			  } else {
+				   res.send(newAmc);
+			  }
+			});
 
-		  }
-		});  
     },
 
     findById: function(req, res) {
@@ -68,12 +45,14 @@ module.exports = {
 
     delete: function(req, res) {
 		
-        amcProvider.findById(req.params.id, function (error, doc) {
+        amcProvider.findById(req.params.id, function (error, amc) {
 		  if (error) {
 			res.send(error, 500);
 		  } else {
-			var documentId = doc.contractDoc.documentId;
-			documentProvider.delete(documentId.toString(), function(error, result) {
+			amc.documents.forEach(function (doc) {
+				var documentId = doc.documentId;
+				documentProvider.delete(documentId.toString(), function(error, result) {
+				});
 			});
 			amcProvider.delete(req.params.id, function(error, result) {
 				res.send('ok', 200);

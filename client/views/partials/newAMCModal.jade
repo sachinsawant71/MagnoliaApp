@@ -30,27 +30,39 @@
                          input#amout.form-control.input-large(ng-model='item.amcAmount', money='',name='amout', type='text', placeholder='', ng-required='true')
              .form-group
                   label.col-md-4.control-label(for='amount') Contract Details
-                  .fileUpload.btn.btn-primary(style="top: -10px;",ng-disabled="uploader.queue.length > 0")
+                  .col-sm-1
+                    .fileUpload.btn.btn-primary(style="top: -10px;",ng-disabled="uploader.queue.length > 0")
                           span.glyphicon.glyphicon-plus
-                          | &nbsp;Contract Document
+                          | &nbsp;Add
                           input.upload(nv-file-select='', uploader="uploader", type='file')
              .form-group
-                  lable.col-md-4 {{}}
+                  label.col-md-4.control-label
+                  .col-sm-3
+                     label.control-label(ng-if='uploader.queue.length > 0') {{uploader.queue[0].file.name}}               
+                  .col-sm-3
+                     input#docDesc.form-control(type='text', ng-if='uploader.queue.length > 0', placeholder='Document Name',ng-model='item.documentName')
+                  .col-sm-2
+                         button.btn.btn-success.btn-xs(style="margin-right:5px;", ng-if='uploader.queue.length > 0', ng-disabled="uploader.queue.length == 0", ng-click="uploader.queue[0].upload()")
+                            i.glyphicon.glyphicon-upload
+                         button.btn.btn-danger.btn-xs(ng-if='uploader.queue.length > 0', ng-disabled="uploader.queue.length == 0", ng-click="uploader.queue[0].remove()")
+                            i.glyphicon.glyphicon-remove
+             .form-group
+                  lable.col-md-4
                   .col-md-6
-                      div(ng-if='uploader.queue.length > 0')
+                      div(ng-if='item.documents.length > 0')
                           table.table.table-condensed 
                                tbody.contact-data
                                  tr
                                     th Document Name
                                     th Action
-                                 tr(ng:repeat='doc in uploader.queue')
+                                 tr(ng:repeat='doc in item.documents')
                                     td
-                                      | {{doc.file.name}}
+                                      | {{doc.documentName}}
                                     td
                                       button.btn.btn-danger.btn-xs(type='button', ng-click='doc.remove()')
                                         span.glyphicon.glyphicon-trash
                                         | &nbsp;&nbsp;Remove
-                      div(ng-if='uploader.queue.length == 0')
+                      div(ng-if='item.documents.length == 0')
                           table.table.table-condensed 
                               tbody.contact-data
                                  tr

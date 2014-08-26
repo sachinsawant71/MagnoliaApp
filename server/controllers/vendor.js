@@ -33,7 +33,7 @@ module.exports = {
 			var vendor = req.body;
 			vendorsProvider.add(vendor, function(error, vendor) {
 			  if (error) {
-				res.send(error, 404);
+				res.send(error, 500);
 			  } else {
 
 			  /*

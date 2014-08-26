@@ -8,7 +8,7 @@
              .form-group
                   label.col-md-4.control-label(for='amount') Vendor Name:
                   .col-md-6
-                        p.form-control-static {{item.vendorName}}
+                        p.form-control-static {{item.vendor}}
              .form-group
                   label.col-md-4.control-label(for='startDate')  Contract Start Date:
                   .col-md-3
@@ -26,11 +26,16 @@
                   .col-md-4
                         p.form-control-static &#8377; {{item.cost}}
              .form-group
-                  label.col-md-4.control-label Contract Document:
+                  label.col-md-4.control-label Contract Documents:
                   .col-md-4
-                       p.form-control-static
-                         a(href='', ng-click='getDoc(item)')
-                             {{item.contractDoc.documentName}}
+                      div(ng-if='item.documents.length > 0')
+                          table.table.table-condensed 
+                               tbody.contact-data
+                                 tr(style="border-top: none;", ng:repeat='doc in item.documents')
+                                    td(style="border-top: none;")
+                                       i.fa.fa-paperclip &nbsp;
+                                       a(href='', ng-click='getDoc(doc)')
+                                             {{doc.documentName}}
 .modal-footer
     div
       button.btn.btn-warning(ng-click='cancel()') Cancel

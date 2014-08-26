@@ -79,11 +79,11 @@ DocumentProvider.prototype.add = function(doc, callback) {
 };
 
 
-DocumentProvider.prototype.delete = function(id, callback) {	
+DocumentProvider.prototype.delete = function(id, callback) {
     this.getCollection(function(error, document_collection) {
       if( error ) callback(error)
       else {
-        document_collection.remove({"_id": document_collection.db.bson_serializer.ObjectID.createFromHexString(id)}, function(error, result) {
+        document_collection.remove({"_id":  ObjectID.createFromHexString(id)}, function(error, result) {
           if( error ) {
 			  console.log(error);
 		  }

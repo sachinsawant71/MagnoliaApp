@@ -1,9 +1,11 @@
-p Committee Members Module
+tabset
+   tab(heading='Members')
+      p(style="margin-top:10px;") Committee Members Module
         alerts
         .navbar.navbar-default
           form.navbar-form.navbar-left(role="search")
             .form-group
-               input#search-control.form-control(type="text", ng-model="query", placeholder="Search Members")
+               input#search-control.form-control(type="text", ng-model="memberQuery", placeholder="Search Members")
                span#search-icon.glyphicon.glyphicon-search
           form.navbar-form.navbar-right(role="search")
                #menu-action.navbar-right
@@ -23,7 +25,7 @@ p Committee Members Module
                 th Status
                 th.action Details
                 th.action Delete
-             tr(ng-class='', ng-repeat='item in members | filter:query')
+             tr(ng-class='', ng-repeat='item in members | filter:memberQuery')
                 td {{item.flatNo}}
                 td {{item.memberName}}
                 td {{item.contactNumber}}
@@ -40,12 +42,40 @@ p Committee Members Module
                 td.action
                    a(href='', ng-click='removeMember($index,item)')
                       i.glyphicon.glyphicon-remove
+   tab(heading='Functional Areas')
+        p(style="margin-top:10px;") Functional Area Module
+         alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="areaQuery", placeholder="Search Area")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.navbar-right
+                  button.btn.btn-warning(type='button', ng-click="open()",ng-controller='NewMemberModalCtrl')
+                            span.glyphicon.glyphicon-plus
+                            |&nbsp;New Area
+        table.table.table-condensed
+          tbody
+             tr
+                th Sr. No.
+                th Area Name
+                th Primary Owner
+                th Secondary Owner
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in assignedfunctionAreas | filter:areaQuery')
+                td {{$index +1}}
+                td {{item.name}}
+                td {{item.primaryOwner.memberName}}
+                td {{item.secondaryOwner.memberName}}
+                td.action
+                   a(href='', ng-click='removeVendor($index,item)')
+                      i.glyphicon.glyphicon-remove
+
 
         script#newMemberModal(type="text/ng-template")
              ng-include(src="'/partials/newMemberModal.jade'")
-
         script#memberModal(type="text/ng-template")
              ng-include(src="'/partials/memberModal.jade'")
-
         script#memberbyFunctionModal(type="text/ng-template")
              ng-include(src="'/partials/memberbyFunctionModal.jade'")

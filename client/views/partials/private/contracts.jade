@@ -63,7 +63,7 @@ tabset
                 th.action Delete
              tr(ng-class='', ng-repeat='item in filteredAmc | filter:query')
                 td {{$index +1}}
-                td {{item.vendorName}}
+                td {{item.vendor}}
                 td {{item.startDate | date:'dd-MM-yyyy'}}
                 td {{item.endDate | date:'dd-MM-yyyy' }}
                 td 

@@ -1282,27 +1282,13 @@ angular.module('magnoliaApp')
 }]);
 
 angular.module('magnoliaApp')
-.controller('MembersCtrl',['$scope','$http','Members',function($scope,$http,Members) {
+.controller('MembersCtrl',['$scope','$http','Members','FunctionalAreas',function($scope,$http,Members,FunctionalAreas) {
 
       
 	  $scope.refreshGrid = function() {
 
-           var request = $http({
-	            method: "get",
-	            url: "/api/functionalareas"
-           });
-
-           request.success(function(areas) {
-                $scope.assignedfunctionAreas = []; 
-                areas.forEach(function (area) {
-                    var assignedfunctionArea = {
-                        name: area.name,
-                        primaryOwner : null,
-                        secondaryOwner : null
-                    }
-                    $scope.assignedfunctionAreas.push(assignedfunctionArea);
-                });
-
+		   FunctionalAreas.query(function(areas, headers) {
+				$scope.assignedfunctionAreas = areas; 
 		        Members.query(function(data, headers) {
 				      $scope.members = data;
                       data.forEach(function (member) {
@@ -1316,9 +1302,8 @@ angular.module('magnoliaApp')
                                             assignedfunctionArea.primaryOwner = member;
                                         }                                    
                                     }                      
-                                });
-                      
-                            });
+                                });                      
+                             });
                           }
                       });
 				      $scope.totalItems =  headers('record-count');
@@ -1889,6 +1874,33 @@ angular.module('magnoliaApp')
 			AlertService.clear();
 			AlertService.success('Information for member is updated');
 		});
+
+
+		//clean the existing map for the updated member
+		$scope.assignedfunctionAreas.forEach(function (assignedfunctionArea) {
+			if(assignedfunctionArea.secondaryOwner && assignedfunctionArea.secondaryOwner.memberName == item.memberName) {
+				assignedfunctionArea.secondaryOwner = null;
+			}
+
+			if(assignedfunctionArea.primaryOwner && assignedfunctionArea.primaryOwner.memberName == item.memberName) {
+				assignedfunctionArea.primaryOwner = null;
+			}
+                
+		});  
+
+		//refill the map for the updated member
+		item.functionAreas.forEach(function (functionArea) {
+			$scope.assignedfunctionAreas.forEach(function (assignedfunctionArea) {
+				if(assignedfunctionArea.name == functionArea.name) {
+					if (functionArea.ownership) {
+						assignedfunctionArea.secondaryOwner = member;
+					} else {
+						assignedfunctionArea.primaryOwner = member;
+					}                                    
+				}                      
+			});                      
+		 });
+
 		$modalInstance.close();
 
   };
@@ -2157,7 +2169,7 @@ angular.module('magnoliaApp')
 }]);
 
 angular.module('magnoliaApp')
-.controller('NewAMCModalInstanceCtrl',['$scope','$modalInstance','$filter','Vendors','FileUploader',function($scope,$modalInstance,$filter,Vendors,FileUploader) {
+.controller('NewAMCModalInstanceCtrl',['$scope','$modalInstance','$filter','$window','AMC','FileUploader',function($scope,$modalInstance,$filter,$window,AMC,FileUploader) {
 
   
   $scope.item = {};
@@ -2176,48 +2188,81 @@ angular.module('magnoliaApp')
 		return periodLength;
   }
 
-  $scope.contractDocs = [];
+  $scope.item.documents = [];
 
   var uploader = $scope.uploader = new FileUploader({
             scope: $scope,        
-            url: '/api/amc',
+            url: '/api/upload',
 			removeAfterUpload: true,
             formData: [
                 { 
-				  vendorName : $scope.item.vendorName,
-				  startDate : new Date($scope.item.amcStartDate),
-				  endDate : new Date($scope.item.amcEndDate),
-				  cost : $scope.item.amcAmount,
-		          documentName : 'Vendor Contract',
-		          documentDescription : $scope.item.vendorName,
-		          accessLevel : 'Admin',
-		          flatnumber: '*'		
+				  documentName: $scope.item.documentName,
+				  documentDescription: 'Vendor Contract ' + $scope.item.vendorName,
+				  accessLevel: 'Admin',
+				  flatnumber : '-'
 				}
             ]
   });
 
   uploader.onAfterAddingFile = function(fileItem) {
-	     $scope.contractDocs.push(fileItem.file.name);
+         $scope.item.documentName = fileItem.file.name;
+  };
+
+  uploader.onSuccessItem = function(fileItem, response, status, headers) {
+        var uploadedDoc = {
+			  documentId : response._id,
+			  documentName: response.documentName,
+			  createdDate: response.createdTimestamp,
+			  documentDescription: response.documentDescription
+
+		}		
+		$scope.item.documents.push(uploadedDoc);
   };
 
   uploader.onBeforeUploadItem = function(item) {
-
+		item.formData[0].documentName = $scope.item.documentName;
         var startDate = $filter('date')($scope.item.amcStartDate, "MM/yyyy");
 		var endDate = $filter('date')($scope.item.amcEndDate, "MM/yyyy");
-
-	    item.formData[0].vendorName = $scope.item.vendorName;
-		item.formData[0].startDate = new Date($scope.item.amcStartDate);
-		item.formData[0].endDate = new Date($scope.item.amcEndDate);
-		item.formData[0].cost = $scope.item.amcAmount;
-		item.formData[0].documentName = 'Vendor Contract';
-		item.formData[0].documentDescription = $scope.item.vendorName + '(' + startDate + ' to ' + endDate + ')';
+		item.formData[0].documentDescription = 'Vendor contract document ' + ' for Period (' + startDate + ' to ' + endDate + ')';		
 		item.formData[0].accessLevel = 'Admin';
-		item.formData[0].flatnumber = '-';
+		item.formData[0].flatnumber = '-'
+
   };
 
+  $scope.getDoc = function(item) {
+	   $window.open("/api/documents/" + item.documentId);	
+  }
+
+  $scope.removeDocument = function (item) {	
+  	Documents.remove({id: item.documentId}, function() {
+		$scope.item.documents.splice(item);
+    });
+  };
+
+
   $scope.ok = function () {	
-	  uploader.uploadAll();
-	  $modalInstance.close();
+
+	   var amc = new AMC({
+                    vendor: $scope.item.vendorName,
+					startDate: $scope.item.amcStartDate,					
+					endDate: $scope.item.amcEndDate,
+                    cost: $scope.item.amcAmount,
+					documents : $scope.item.documents
+             });
+
+
+	   amc.$save(function (data) {
+					$modalInstance.close(data);
+		            AlertService.clear();
+		            AlertService.success('AMC data for ' + item.vendorName + ' is added');
+
+					}, function ($http) {
+						console.log('Couldn\'t save amc data.');
+						$modalInstance.close();
+	   });
+
+
+
   };
 
   $scope.cancel = function () {
@@ -2262,7 +2307,7 @@ angular.module('magnoliaApp')
 .controller('ModalInstanceAmcCtrl',['$scope','$modalInstance','$window',function($scope,$modalInstance,$window) {
 
   $scope.getDoc = function(item) {
-	   $window.open("/api/documents/" + item._id);	
+	   $window.open("/api/documents/" + item.documentId);	
   }
 
   $scope.ok = function () {	
