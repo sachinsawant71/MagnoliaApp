@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('magnoliaApp', ['ngCookies', 'ui.router','ngResource','naturalSort','ui.tinymce','ui.checkbox','ui.bootstrap','ui.bootstrap.alerts','angularFileUpload','mgo-angular-wizard','textAngular','ngCsv'])
+angular.module('magnoliaApp', ['ngCookies', 'ui.router','ngResource','naturalSort','ui.checkbox','ui.bootstrap','ui.bootstrap.alerts','angularFileUpload','mgo-angular-wizard','textAngular','ngCsv'])
 
     .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 

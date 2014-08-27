@@ -70,24 +70,11 @@ module.exports = {
     },
     update: function(req, res) {
 			var member = req.body;
-			membersProvider.update(member, function(error, updatedMember) {			  
+			membersProvider.update(member, function(error, result) {			  
 			  if (error) {
 				res.send(error, 500);
 			  } else {
-                    var flatNo = updatedMember.flatNo;
-                    apartmentProvider.findById(flatNo, function (error, apartment) {
-                        if (!updatedMember.isCoonwer) {
-                            updatedMember.memberName = apartment.owner.name;
-                            updatedMember.contactNumber = apartment.owner.phones[0];
-                            updatedMember.emailId = apartment.owner.emails[0];                            
-                        } else {
-                            updatedMember.memberName = apartment.owner.coowner.name;
-                            updatedMember.contactNumber = apartment.owner.coowner.phone;
-                            updatedMember.emailId = apartment.owner.coowner.email;
-                        }
-                            res.send(updatedMember);
-                    });
-				
+				res.send(result);				
 			  }
 			}); 
     }

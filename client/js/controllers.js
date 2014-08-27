@@ -1874,28 +1874,28 @@ angular.module('magnoliaApp')
 			AlertService.clear();
 			AlertService.success('Information for member is updated');
 		});
-
+        $scope.refreshGrid($scope.currentPage);
 
 		//clean the existing map for the updated member
 		$scope.assignedfunctionAreas.forEach(function (assignedfunctionArea) {
-			if(assignedfunctionArea.secondaryOwner && assignedfunctionArea.secondaryOwner.memberName == item.memberName) {
+			if(assignedfunctionArea.secondaryOwner && assignedfunctionArea.secondaryOwner.memberName == $scope.item.memberName) {
 				assignedfunctionArea.secondaryOwner = null;
 			}
 
-			if(assignedfunctionArea.primaryOwner && assignedfunctionArea.primaryOwner.memberName == item.memberName) {
+			if(assignedfunctionArea.primaryOwner && assignedfunctionArea.primaryOwner.memberName == $scope.item.memberName) {
 				assignedfunctionArea.primaryOwner = null;
 			}
                 
 		});  
 
 		//refill the map for the updated member
-		item.functionAreas.forEach(function (functionArea) {
+		$scope.item.functionAreas.forEach(function (functionArea) {
 			$scope.assignedfunctionAreas.forEach(function (assignedfunctionArea) {
 				if(assignedfunctionArea.name == functionArea.name) {
 					if (functionArea.ownership) {
-						assignedfunctionArea.secondaryOwner = member;
+						assignedfunctionArea.secondaryOwner = $scope.item;
 					} else {
-						assignedfunctionArea.primaryOwner = member;
+						assignedfunctionArea.primaryOwner = $scope.item;
 					}                                    
 				}                      
 			});                      
