@@ -17,7 +17,10 @@ var users = [];
 Fiber(function() {
 	var Server = require("mongo-sync").Server;
     var server = new Server(config.db_host + ":" + config.db_port );
-	server.auth(config.db_user, config.db_password);
+	if (config.db_user) {
+		server.auth(config.db_user, config.db_password);
+	}
+	
     users = server.db(config.db_name).getCollection("users").find().toArray();
 	for (i=0;i<users.length ;i++ ) {
 		users[i].id = users[i]._id;
