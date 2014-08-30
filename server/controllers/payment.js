@@ -1,6 +1,6 @@
 var _ =           require('underscore');
 var PaymentProvider = require('../models/Payment.js').PaymentProvider;
-var paymentProvider = new PaymentProvider('localhost', 27017);
+var paymentProvider = new PaymentProvider();
 
 
 module.exports = {

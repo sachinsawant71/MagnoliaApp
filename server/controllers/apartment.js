@@ -1,14 +1,20 @@
 var _ =  require('underscore');
 var swig = require('swig');
+
 var path = require("path");
 var naturalSort = require("javascript-natural-sort");
+
 var nodemailer = require("nodemailer");
+
 var csv = require('csv');
+
 var emailSender = require('../services/email-dispatcher.js');
+
 
 var ApartmentProvider = require('../models/Apartment.js').ApartmentProvider;
 
-var apartmentProvider = new ApartmentProvider('localhost', 27017);
+
+var apartmentProvider = new ApartmentProvider();
 
 
 module.exports = {

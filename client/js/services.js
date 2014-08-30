@@ -1,4 +1,10 @@
 'use strict';
+
+angular.module('magnoliaApp').constant('CONFIG', {
+	'maxFileSize' : 8,
+    'allowedFileExtn' : '|msword|vnd.openxmlformats-officedocument.presentationml.presentation|vnd.ms-powerpoint|x-zip-compressed|pdf|txt|xml|csv|vnd.ms-excel|vnd.openxmlformats-officedocument.spreadsheetml.sheet|vnd.openxmlformats-officedocument.wordprocessingml.document|'
+});
+
 angular.module('magnoliaApp')
 .factory('Auth', function($http, $cookieStore){
 

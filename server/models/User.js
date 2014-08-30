@@ -10,38 +10,18 @@ var User
 	, Fiber            = require('fibers')
     , userRoles =       require('../../client/js/routingConfig').userRoles;
 
+var config = require('../config.js');
+
 var users = [];
 
 Fiber(function() {
 	var Server = require("mongo-sync").Server;
-    var server = new Server('127.0.0.1:27017');
-    users = server.db("magnolia").getCollection("users").find().toArray();
+    var server = new Server(config.db_host + ':' + config.db_port);
+    users = server.db(config.db_name).getCollection("users").find().toArray();
 	for (i=0;i<users.length ;i++ ) {
 		users[i].id = users[i]._id;
 	}
 }).run(); 
-
-/*
-
-var users = [
-  {
-    "username": "admin@magnolia.com",
-    "password": "unicorn",
-    "role": { "bitMask": 4, "title": 'admin' },
-    "apartmentnumber": "all",
-    "id": "53314e7469ec69343a3b698a"
-  },
-  {
-    "username": "sachin_sawant71@yahoo.com",
-    "password": "magnolia1",
-    "role": { "bitMask": 2, "title": 'user' },
-    "apartmentnumber": "D-105",
-    "id": "53314e7469ec69343a3b698b"
-  }
-];
-*/
-
-console.log(users);
 
 module.exports = {
     addUser: function(username, password, role, callback) {

@@ -285,6 +285,22 @@ angular.module('magnoliaApp')
             ]
   });
 
+  uploader.filters.push({
+	name: 'docFilter',
+	fn: function(item /*{File|FileLikeObject}*/, options) {
+		var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+		return '|doc|pdf|docx|txt|xml|csv|xls|xlsx'.indexOf(type) !== -1;
+	}
+  });
+
+  uploader.filters.push({
+	name: 'fileSize',
+	fn: function(item /*{File|FileLikeObject}*/, options) {
+		var size = item.size/1024/1024;
+		return size < 5;
+	}
+  });
+
   uploader.onAfterAddingFile = function(fileItem) {
          $scope.doc.documentName = fileItem.file.name;
 		 $scope.doc.documentDescription = fileItem.file.name;
@@ -1108,7 +1124,7 @@ angular.module('magnoliaApp')
 
 
 angular.module('magnoliaApp')
-.controller('DocumentUploadModalInstanceCtrl',['$scope','$modalInstance','FileUploader','AlertService',function($scope,$modalInstance,FileUploader,AlertService) {
+.controller('DocumentUploadModalInstanceCtrl',['$scope','$modalInstance','FileUploader','AlertService','CONFIG',function($scope,$modalInstance,FileUploader,AlertService,CONFIG) {
 
 	 $scope.item = {};
 
@@ -1123,6 +1139,23 @@ angular.module('magnoliaApp')
 					}
 				]
 	  });
+
+	  uploader.filters.push({
+		name: 'docFilter',
+		fn: function(item /*{File|FileLikeObject}*/, options) {
+			var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+			console.log(type);
+			return CONFIG.allowedFileExtn.indexOf(type) !== -1;
+		}
+	  });
+
+      uploader.filters.push({
+	    name: 'fileSize',
+	    fn: function(item /*{File|FileLikeObject}*/, options) {
+		  var size = item.size/1024/1024;
+		  return size < CONFIG.maxFileSize;
+	    }
+      });
 
 
 	  uploader.onAfterAddingFile = function(fileItem) {
@@ -2202,6 +2235,22 @@ angular.module('magnoliaApp')
 				  flatnumber : '-'
 				}
             ]
+  });
+
+  uploader.filters.push({
+		name: 'docFilter',
+		fn: function(item /*{File|FileLikeObject}*/, options) {
+			var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+			return '|doc|pdf|docx|txt|xml|csv|xls|xlsx'.indexOf(type) !== -1;
+		}
+  });
+
+  uploader.filters.push({
+	name: 'fileSize',
+	fn: function(item /*{File|FileLikeObject}*/, options) {
+		var size = item.size/1024/1024;
+		return size < 5;
+	}
   });
 
   uploader.onAfterAddingFile = function(fileItem) {

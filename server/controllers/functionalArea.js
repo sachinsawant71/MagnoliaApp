@@ -1,6 +1,6 @@
 var _ =           require('underscore');
 var FunctionalAreaProvider = require('../models/FunctionalAreas.js').FunctionalAreaProvider;
-var functionalAreaProvider = new FunctionalAreaProvider('localhost', 27017);
+var functionalAreaProvider = new FunctionalAreaProvider();
 
 
 module.exports = {

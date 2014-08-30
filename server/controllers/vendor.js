@@ -1,6 +1,6 @@
 var _ =           require('underscore');
 var VendorsProvider = require('../models/Vendors.js').VendorsProvider;
-var vendorsProvider = new VendorsProvider('localhost', 27017);
+var vendorsProvider = new VendorsProvider();
 
 
 module.exports = {

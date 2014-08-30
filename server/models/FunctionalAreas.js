@@ -3,9 +3,10 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var BSON = require('mongodb').BSON;
 var ObjectID = require('mongodb').ObjectID;
+var config = require('../config.js');
 
 FunctionalAreaProvider = function(host, port) {
-  this.db= new Db('magnolia', new Server(host, port, {auto_reconnect: true}, {}),{safe:false});
+  this.db = new Db(config.db_name, new Server(config.db_host,config.db_port, {auto_reconnect: true}, {}),{safe:false});
   this.db.open(function(){});
 };
 

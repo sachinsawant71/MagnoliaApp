@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var DocumentProvider = require('../models/Document.js').DocumentProvider;
 
-var documentProvider = new DocumentProvider('localhost', 27017);
+var documentProvider = new DocumentProvider();
 
 module.exports = {
     upload: function(req, res) {

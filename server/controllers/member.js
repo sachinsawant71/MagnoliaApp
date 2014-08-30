@@ -1,8 +1,8 @@
 var _ =           require('underscore');
 var MembersProvider = require('../models/Members.js').MembersProvider;
 var ApartmentProvider = require('../models/Apartment.js').ApartmentProvider;
-var membersProvider = new MembersProvider('localhost', 27017);
-var apartmentProvider = new ApartmentProvider('localhost', 27017);
+var membersProvider = new MembersProvider();
+var apartmentProvider = new ApartmentProvider();
 var async = require("async");
 
 var populateMemberData = function (member, doneCallback) {

@@ -4,9 +4,10 @@ var Connection = require('mongodb').Connection;
 var Server = require('mongodb').Server;
 var ObjectID = require('mongodb').ObjectID;
 var BSON = mongo.BSONPure;
+var config = require('../config.js');
 
 AmcProvider = function(host, port) {
-  this.db= new Db('magnolia', new Server(host, port, {auto_reconnect: true}, {}),{safe:false});
+  this.db = new Db(config.db_name, new Server(config.db_host,config.db_port, {auto_reconnect: true}, {}),{safe:false});
   this.db.open(function(){});
 };
 
@@ -98,8 +99,6 @@ AmcProvider.prototype.update = function(vendor, callback) {
     this.getCollection(function(error, amc_collection) {
       if( error ) callback(error);
       else {
-		       console.log('in update');
-			   console.log(JSON.stringify(vendor));
 			   amc_collection.update( {_id: new BSON.ObjectID(vendor._id)},
 							{$set: {
 									vendorName : vendor.vendorName,

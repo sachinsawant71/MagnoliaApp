@@ -8,8 +8,8 @@ var emailSender = require('../services/email-dispatcher.js');
 var ReceiptsProvider = require('../models/Receipts.js').ReceiptsProvider;
 var ApartmentProvider = require('../models/Apartment.js').ApartmentProvider;
 
-var receiptsProvider = new ReceiptsProvider('localhost', 27017);
-var apartmentProvider = new ApartmentProvider('localhost', 27017);
+var receiptsProvider = new ReceiptsProvider();
+var apartmentProvider = new ApartmentProvider();
 
 
 

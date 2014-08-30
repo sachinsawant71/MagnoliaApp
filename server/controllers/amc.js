@@ -1,10 +1,10 @@
 var fs = require('fs');
 var path = require('path');
 var AmcProvider = require('../models/Amc.js').AmcProvider;
-var amcProvider = new AmcProvider('localhost', 27017);
+var amcProvider = new AmcProvider();
 
 var DocumentProvider = require('../models/Document.js').DocumentProvider;
-var documentProvider = new DocumentProvider('localhost', 27017);
+var documentProvider = new DocumentProvider();
 
 module.exports = {
     add: function(req, res) {
