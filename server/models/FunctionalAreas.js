@@ -7,7 +7,9 @@ var config = require('../config.js');
 
 FunctionalAreaProvider = function(host, port) {
   this.db = new Db(config.db_name, new Server(config.db_host,config.db_port, {auto_reconnect: true}, {}),{safe:false});
-  this.db.open(function(){});
+  this.db.open(function(error, db){
+	db.authenticate(config.user, config.pass, function(error, result) {});
+  });
 };
 
 
