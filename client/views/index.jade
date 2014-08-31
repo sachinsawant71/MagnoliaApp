@@ -8,8 +8,8 @@ html(lang='en', data-ng-app='magnoliaApp')
         link(rel='stylesheet', href='/css/loginstyle.css')
         link(rel='stylesheet', href='/css/app.css')
         link(rel='stylesheet', href='/css/gridforms.css')
-        link(rel='icon',type='image/png',href='/favicon-16x16.png',sizes='16x16')
-        link(rel='icon',type='image/png',href='/favicon-32x32.png',sizes='32x32')
+        link(rel="shortcut icon",href="/favicon.ico",type="image/x-icon")
+        link(rel="icon", href="/favicon.ico",type="image/x-icon")
 
         // This is needed because Facebook login redirects add #_=_ at the end of the URL
         script(type="text/javascript").
@@ -23,7 +23,7 @@ html(lang='en', data-ng-app='magnoliaApp')
             .navbar-inner
                 .container-fluid
                         a(href="#" class="brand")
-                             img(src="/img/logo.png")
+                             img(src="/img/logo.png" style="margin-left:25px;")
                         div#userInfo.pull-right(data-access-level='accessLevels.user')                             
                             | Welcome&nbsp;
                             strong {{ user.username }}&nbsp;&nbsp;                           
