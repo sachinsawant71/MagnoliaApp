@@ -1,0 +1,16 @@
+p Data Import
+        alerts
+        table.table.table-condensed
+          tbody
+             tr
+                th Entity Name     
+                th.action Template
+                th.action Import
+             tr(ng-class='', ng-repeat='item in importEntities')
+                td {{item}}
+                td.action(ng-controller='ModalImportCtrl')
+                   a(href='', ng-click='open($index,item)')
+                      i.glyphicon.glyphicon-file
+                td.action
+                   a(href='', ng-click='import($index,item)')
+                      i.glyphicon.glyphicon-import

@@ -2,9 +2,9 @@
 
 angular.module('magnoliaApp', ['ngCookies', 'ui.router','ngResource','naturalSort','ui.checkbox','ui.bootstrap','ui.bootstrap.alerts','angularFileUpload','mgo-angular-wizard','textAngular','ngCsv'])
 
-    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider', function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
+    .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider',function ($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 
-    var access = routingConfig.accessLevels;
+	var access = routingConfig.accessLevels;
 
     // Public routes
     $stateProvider
@@ -39,6 +39,11 @@ angular.module('magnoliaApp', ['ngCookies', 'ui.router','ngResource','naturalSor
             templateUrl: 'login',
             controller: 'LoginCtrl'
         })
+        .state('anon.forgotpasword', {
+            url: '/forgot/',
+            templateUrl: 'forgotpassword',
+            controller: 'passwordCtrl'
+        })
         .state('anon.register', {
             url: '/register/',
             templateUrl: 'register',
@@ -51,7 +56,7 @@ angular.module('magnoliaApp', ['ngCookies', 'ui.router','ngResource','naturalSor
             abstract: true,
             template: "<ui-view/>",
             data: {
-                access: access.user
+                access: access.owner
             }
         })
         .state('user.private', {
@@ -120,6 +125,56 @@ angular.module('magnoliaApp', ['ngCookies', 'ui.router','ngResource','naturalSor
             url: 'dashboard/',
             templateUrl: 'private/dashboard',
 			controller: 'DashboardCtrl'
+        })
+        .state('admin.admin.admin', {
+            url: 'admin/',
+            templateUrl: 'private/admin',
+			controller: 'AdminPageCtrl'
+        })
+        .state('admin.admin.admin.property', {
+            url: 'admin/property',
+            templateUrl: 'private/property',
+			controller: 'PropertyCtrl'
+        })
+        .state('admin.admin.admin.emailsetting', {
+            url: 'admin/emailsetting',
+            templateUrl: 'private/emailsetting',
+			controller: 'EmailSettingCtrl'
+        })
+        .state('admin.admin.admin.importdata', {
+            url: 'admin/importdata',
+            templateUrl: 'private/importdata',
+			controller: 'ImportDataCtrl'
+        })
+        .state('admin.admin.admin.exportdata', {
+            url: 'admin/exportdata',
+            templateUrl: 'private/exportdata',
+			controller: 'ExportDataCtrl'
+        })
+        .state('admin.admin.admin.emailtemplates', {
+            url: 'admin/emailtemplates',
+            templateUrl: 'private/emailtemplates',
+			controller: 'EmailTemplatesCtrl'
+        })
+        .state('admin.admin.admin.functionalareas', {
+            url: 'admin/functionalareas',
+            templateUrl: 'private/functionalareas',
+			controller: 'FunctionalAreasCtrl'
+        })
+        .state('admin.admin.admin.usermanagement', {
+            url: 'admin/usermanagement',
+            templateUrl: 'private/usermanagement',
+			controller: 'UserManagementCtrl'
+        })
+        .state('admin.admin.tasks', {
+            url: 'tasks/',
+            templateUrl: 'private/tasks',
+			controller: 'TasksCtrl'
+        })
+        .state('admin.admin.assets', {
+            url: 'assets/',
+            templateUrl: 'private/assets',
+			controller: 'AssetsCtrl'
         })
         .state('admin.admin.documents', {
             url: 'documents/',

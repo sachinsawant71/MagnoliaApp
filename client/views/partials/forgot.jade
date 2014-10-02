@@ -1,0 +1,26 @@
+div(no-background-image)
+ block head
+    title #{application} &middot; Forgot Password
+
+ block content
+   .container
+     .row
+      .col-sm-6.col-sm-offset-3        
+        br
+        br
+        alerts
+        form(ng-submit="forgot()", name="forgotForm", role="form")
+          input(type='hidden', name='_csrf', value=token)
+          legend Forgot Password
+          div.form-group
+            p Enter your email address and we'll send you reset instructions.
+            label.sr-only(for='email') Enter Your Email:
+            input.form-control(type='email', name='email', data-ng-model="item.emailid",id='email', placeholder='Your Email', autofocus=true, required)
+            #hint
+          div.form-group
+            button.btn.btn-primary(type='submit',data-ng-disabled="forgotForm.$invalid")
+              i.fa.fa-lock
+              | &nbsp;Reset Password
+            | &nbsp;
+            a.btn.btn-link(href='/login') Remembered your password?
+

@@ -1,0 +1,67 @@
+tabset
+   tab(heading='Users')
+     p(style="margin-top:10px;") User Management
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="userQuery", placeholder="Search User")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.navbar-right
+                  button.btn.btn-warning(type='button', ng-click="open()",ng-controller='NewUserModalCtrl')
+                            span.glyphicon.glyphicon-plus
+                            | New User
+        table.table.table-condensed
+          tbody
+             tr
+                th User Email
+                th Role
+                th Aprtment Number
+                th.action Details
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in users | filter:userQuery')
+                td {{item.username}}
+                td {{item.role.title}}
+                td {{item.apartmentnumber}}
+                td.action(ng-controller='ModalUserCtrl')
+                   a(href='', ng-click='open(null,$index,item)')
+                      i.glyphicon.glyphicon-wrench
+                td.action
+                   a(href='', ng-click='removeUser($index,item)')
+                      i.glyphicon.glyphicon-remove
+   tab(heading='Registration Requests')
+     p(style="margin-top:10px;") User Registration Requests
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="registrationQuery", placeholder="Search User")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.navbar-right
+        table.table.table-condensed
+          tbody
+             tr
+                th User Name
+                th Email ID
+                th Phone Number
+                th Aprtment Number
+                th.action Accept Request
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in registrations | filter: registrationQuery')
+                td {{item.username}}
+                td {{item.emailid}}
+                td {{item.phonenumber}}
+                td {{item.apartmentno}}
+                td.action
+                   a(href='', ng-click='acceptRegistration($index,item)')
+                      i.glyphicon.glyphicon-saved
+                td.action
+                   a(href='', ng-click='removeRegistration($index,item)')
+                      i.glyphicon.glyphicon-remove
+
+        script#userModal(type="text/ng-template")
+             ng-include(src="'/partials/userModal.jade'")
+        script#newUserModal(type="text/ng-template")
+             ng-include(src="'/partials/newUserModal.jade'")

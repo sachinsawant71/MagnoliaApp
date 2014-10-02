@@ -1,4 +1,4 @@
-#logincontainer
+#logincontainer(background-image)
           section(id="content")
                  form(id="loginform", ng-submit="login()", name="loginForm", role="form")
                       h1 Log-in
@@ -8,5 +8,5 @@
                           input(type="password",data-ng-model="password", placeholder="Password" ,required, id="password")
                       div
                            input(type="submit", value="Log in")
-                           a(href="#") Lost your password?
-                           a(href="/register") Register
+                           a(href="/forgot") Lost your password?
+                           a(href="/register") Sign Up

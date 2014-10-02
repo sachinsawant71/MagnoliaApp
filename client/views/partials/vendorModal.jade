@@ -33,13 +33,14 @@
                .form-group
                   label.col-md-4.control-label(for='status') Status
                   .col-md-4
-                       label.radio-inline
-                             input#status-1(name='status', ng-model='item.active', value='1',type='radio')
-                             | Active
-                       label.radio-inline
-                             input#status-0(name='status', ng-model='item.active', value='0',type='radio')
-                             | In-Active
-
+                     .radio.radio-success
+                        input#status-0(name='status', ng-model='item.active', value='0', checked='checked', type='radio')
+                        label(for='status-0')                           
+                           | In-Active
+                     .radio.radio-success
+                        input#status-1(name='status', ng-model='item.active', value='1', type='radio')
+                        label(for='status-1')                           
+                           | Active
                .form-group(ng-if='item.referencedbyName')
                   label.col-md-4.control-label(for='referencedBy') Referenced By
                   .col-md-7

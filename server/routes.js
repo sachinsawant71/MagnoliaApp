@@ -9,7 +9,11 @@ var _ =           require('underscore')
 	, VendorCtrl  =  require('./controllers/vendor')
 	, UploadCtrl  =  require('./controllers/upload')
 	, MemberCtrl  =  require('./controllers/member')
+	, UsersCtrl   =  require('./controllers/appUser')
 	, AmcCtrl  =  require('./controllers/amc')
+	, FinancialAssetCtrl  =  require('./controllers/financialAssets')
+	, TasksCtrl  =  require('./controllers/task')
+	, RegistrationsCtrl  =  require('./controllers/registration')
 	, FuntionalAreaCtrl =  require('./controllers/functionalArea')
     , User =      require('./models/User.js')
     , userRoles = require('../client/js/routingConfig').userRoles
@@ -44,6 +48,11 @@ var routes = [
         middleware: [AuthCtrl.logout]
     },
     {
+        path: '/forgot',
+        httpMethod: 'POST',
+        middleware: [AuthCtrl.forgot]
+    },
+    {
         path: '/users',
         httpMethod: 'GET',
         middleware: [UserCtrl.index],
@@ -70,7 +79,7 @@ var routes = [
         path: '/api/apartmentnumbers',
         httpMethod: 'GET', 
         middleware: [AptCtrl.getAllAptNo],
-        accessLevel: accessLevels.admin
+        accessLevel: accessLevels.public
     },
     {
         path: '/api/apartments/owner/:id',
@@ -274,6 +283,30 @@ var routes = [
         accessLevel: accessLevels.admin
     },
     {
+        path: '/api/financialassets',
+        httpMethod: 'GET',
+        middleware: [FinancialAssetCtrl.findAll],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/financialassets',
+        httpMethod: 'POST', 
+        middleware: [FinancialAssetCtrl.add],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/financialassets/:id',
+        httpMethod: 'GET', 
+        middleware: [FinancialAssetCtrl.findById],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/financialassets/:id',
+        httpMethod: 'DELETE', 
+        middleware: [FinancialAssetCtrl.delete],
+        accessLevel: accessLevels.admin
+    },
+    {
         path: '/api/functionalareas',
         httpMethod: 'GET',
         middleware: [FuntionalAreaCtrl.findAll],
@@ -295,6 +328,95 @@ var routes = [
         path: '/api/functionalareas/:id',
         httpMethod: 'DELETE', 
         middleware: [FuntionalAreaCtrl.delete],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/tasks',
+        httpMethod: 'GET',
+        middleware: [TasksCtrl.findAll],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/tasks',
+        httpMethod: 'POST', 
+        middleware: [TasksCtrl.add],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/tasks/:id',
+        httpMethod: 'GET', 
+        middleware: [TasksCtrl.findById],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/tasks/:id',
+        httpMethod: 'DELETE', 
+        middleware: [TasksCtrl.delete],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/tasks/:id',
+        httpMethod: 'PUT', 
+        middleware: [TasksCtrl.update],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/users',
+        httpMethod: 'GET',
+        middleware: [UsersCtrl.findAll],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/users',
+        httpMethod: 'POST', 
+        middleware: [UsersCtrl.add],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/users/:id',
+        httpMethod: 'GET', 
+        middleware: [UsersCtrl.findById],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/users/:id',
+        httpMethod: 'DELETE', 
+        middleware: [UsersCtrl.delete],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/users/:id',
+        httpMethod: 'PUT', 
+        middleware: [UsersCtrl.update],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/registrations',
+        httpMethod: 'GET',
+        middleware: [RegistrationsCtrl.findAll],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/registrations',
+        httpMethod: 'POST', 
+        middleware: [RegistrationsCtrl.add]
+    },
+    {
+        path: '/api/registrations/:id',
+        httpMethod: 'GET', 
+        middleware: [RegistrationsCtrl.findById],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/registrations/:id',
+        httpMethod: 'DELETE', 
+        middleware: [RegistrationsCtrl.delete],
+        accessLevel: accessLevels.admin
+    },
+    {
+        path: '/api/registrations/:id',
+        httpMethod: 'PUT', 
+        middleware: [RegistrationsCtrl.update],
         accessLevel: accessLevels.admin
     },
     {
@@ -346,7 +468,7 @@ function ensureAuthorized(req, res, next) {
     if(!req.user) role = userRoles.public;
     else          role = req.user.role;
 
-    var accessLevel = _.findWhere(routes, { path: req.route.path }).accessLevel || accessLevels.public;
+	var accessLevel = _.findWhere(routes, { path: req.route.path,httpMethod: req.method}).accessLevel || accessLevels.public;
 
     if(!(accessLevel.bitMask & role.bitMask)) return res.send(403);
     return next();

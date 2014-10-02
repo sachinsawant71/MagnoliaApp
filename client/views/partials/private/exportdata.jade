@@ -1,0 +1,16 @@
+p Data Export
+        alerts
+        table.table.table-condensed
+          tbody
+             tr
+                th Entity Name     
+                th.action Template
+                th.action Export
+             tr(ng-class='', ng-repeat='item in exportEntities')
+                td {{item}}
+                td.action(ng-controller='ModalExportCtrl')
+                   a(href='', ng-click='open($index,item)')
+                      i.glyphicon.glyphicon-file
+                td.action
+                   a(href='', ng-click='exportEntity($index,item)')
+                      i.glyphicon.glyphicon-export

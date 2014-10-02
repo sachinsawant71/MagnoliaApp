@@ -1,0 +1,70 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 New User Account
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='userForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='checkboxes') Role
+                  .col-md-4
+                      .checkbox.checkbox-success
+                         input#checkboxes-0(type='checkbox',ng-model='user.admin', name='checkboxes')
+                         label(for='checkboxes-0')                            
+                            | Administrator
+                      .checkbox.checkbox-success
+                         input#checkboxes-1(type='checkbox',ng-model='user.manager', name='checkboxes')
+                         label(for='checkboxes-1')                            
+                            | Manager 
+                      .checkbox.checkbox-success
+                         input#checkboxes-4(type='checkbox',ng-model='user.chairman', name='checkboxes')
+                         label(for='checkboxes-4')                            
+                            | Chairman
+                      .checkbox.checkbox-success
+                         input#checkboxes-3(type='checkbox',ng-model='user.secretary', name='checkboxes')
+                         label(for='checkboxes-3')
+                            | Secretary
+                      .checkbox.checkbox-success
+                         input#checkboxes-5(type='checkbox',ng-model='user.treasurer', name='checkboxes')
+                         label(for='checkboxes-5')                            
+                            | Treasurer
+                      .checkbox.checkbox-success
+                         input#checkboxes-2(type='checkbox',ng-model='user.member', name='checkboxes')
+                         label(for='checkboxes-2')                            
+                            | Commitee Member
+                      .checkbox.checkbox-success
+                          input#checkboxes-6(type='checkbox',ng-model='user.owner', ng-click='ownerCheck()', name='checkboxes')
+                          label(for='checkboxes-6')                            
+                            | Apartment Owner
+               div(ng-show='user.owner || user.chairman || user.member || user.treasurer || user.secretary')
+                .form-group 
+                  label.col-md-4.control-label(for='apartment') Apartment 
+                  .col-md-3
+                     select.form-control.input-small(ng-model="user.flatNo",placeholder='Flat Number',ng-change="aptChange()", ng-options="aptno for aptno in apartmentnumbers")
+                .form-group
+                  label.col-md-4.control-label(for='Owner Type') Owner Type 
+                  .col-md-3
+                     .radio.radio-success.radio-inline
+                          input#inlineRadio1(type='radio', value='option1', name='radioInline', checked='')
+                          label(for='inlineRadio1')  Owner 
+                     .radio.radio-inline.radio-success
+                          input#inlineRadio2(type='radio', value='option1', ng-disabled='!hasCoOwner', name='radioInline')
+                          label(for='inlineRadio2')  Co-Owner
+               .form-group
+                  label.col-md-4.control-label(for='username') User Name
+                  .col-md-6
+                     input#username.form-control.input-xlarge(name='useremail',type="text", ng-model='user.name', placeholder='User Name', ng-required='true')
+               .form-group
+                  label.col-md-4.control-label(for='useremail') User ID/Email
+                  .col-md-6
+                     input#userEmail.form-control.input-xlarge(name='useremail',type="email", ng-model='user.email', placeholder='User Email', ng-required='true')
+               .form-group
+                  label.col-md-4.control-label(for='userphone') Phone Number
+                  .col-md-6
+                     input#userphone.form-control.input-large(name='userphone',type="text", ng-model='user.phone', placeholder='User Phone', ng-required='true')
+
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!(userForm.$valid && checkApt())', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel
+

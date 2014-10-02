@@ -19,8 +19,12 @@ angular.module('magnoliaApp')
 
 angular.module('magnoliaApp')
 .controller('LoginCtrl',
-['$rootScope', '$scope', '$location', '$window', 'Auth', function($rootScope, $scope, $location, $window, Auth) {
+['$rootScope', '$scope', '$location', '$window', 'Auth','AlertService', function($rootScope, $scope, $location, $window, Auth, AlertService) {
+	AlertService.clear();
 
+    if (Auth.user.username != '') {
+		Auth.logout();
+    }
     $scope.rememberme = true;
     $scope.login = function() {
         Auth.login({
@@ -29,12 +33,14 @@ angular.module('magnoliaApp')
                 rememberme: $scope.rememberme
             },
             function(res) {
-				console.log(Auth.user.role);
 				if (Auth.user.role.bitMask ==4) {
 					$location.path('/admin/dashboard');
 				}
-                if (Auth.user.role.bitMask ==2) {
+                if (Auth.user.role.bitMask == 8) {
 					$location.path('/user/details');
+				}
+                if (Auth.user.role.bitMask == 20) {
+					$location.path('/admin/dashboard');
 				}
             },
             function(err) {
@@ -48,23 +54,67 @@ angular.module('magnoliaApp')
 }]);
 
 angular.module('magnoliaApp')
+.controller('passwordCtrl',
+['$rootScope', '$scope', '$location', 'Auth','$http','AlertService',function($rootScope, $scope, $location, Auth, $http, AlertService) {
+
+	 $scope.item = {};
+	 $scope.forgot = function () {
+		 Auth.forgot( { email: $scope.item.emailid},
+            function() {
+				AlertService.clear();
+				AlertService.success('We sent you an email with further instructions. Check your email!');	
+				$scope.item = {};
+            },
+            function(err) {
+				AlertService.clear();
+				AlertService.error('Your user account does not exists in the system.');	
+            });
+	 };
+
+}]);
+
+angular.module('magnoliaApp')
 .controller('RegisterCtrl',
-['$rootScope', '$scope', '$location', 'Auth', function($rootScope, $scope, $location, Auth) {
+['$rootScope', '$scope', '$location', 'Auth','$http','AlertService','Registrations',function($rootScope, $scope, $location, Auth, $http, AlertService,Registrations) {
     $scope.role = Auth.userRoles.user;
     $scope.userRoles = Auth.userRoles;
 
+	$scope.item = {};
+
+	$scope.toLogin =  function() {
+         $location.path('/login');
+    };
+
+	var request = $http({
+			method: "get",
+			url: "/api/apartmentnumbers"
+	});
+
+	request.success(function(data) {
+			$scope.apartmentnumbers = data;
+	});
+
     $scope.register = function() {
-        Auth.register({
-                username: $scope.username,
-                password: $scope.password,
-                role: $scope.role
-            },
-            function() {
-                $location.path('/');
-            },
-            function(err) {
-                $rootScope.error = err;
-            });
+
+	  var registration = new Registrations({
+                        username : $scope.item.username,
+                        emailid: $scope.item.emailid,
+						phonenumber : $scope.item.phoneno,
+					    apartmentno : $scope.item.apartmentNumber,
+						createdDate: new Date()
+				 });
+
+	   registration.$save(function (data) {
+						$scope.item = {};
+						AlertService.clear();
+						AlertService.success('Thank You for your registration request. We will send you an email confirmation shortly.');
+					}, function () {
+						AlertService.clear();
+						AlertService.error('Sorry! We encountered an error while processing your request. Please contact apartment office.');
+					});
+
+
+
     };
 }]);
 
@@ -515,7 +565,6 @@ angular.module('magnoliaApp')
 	'Dhanlaxmi Bank','Federal Bank','City Union Bank','Development Credit Bank','BNP Paribas','HSBC','Citibank N.A.'];
 
 
-
   if (!!item.receipt) {
 	$scope.receipt = item.receipt;	
 	Apartments.get({id:item.receipt.flatnumber},function(apartment) {
@@ -824,9 +873,6 @@ angular.module('magnoliaApp')
 	  };
 
 }]);
-
-
-
 
 
 
@@ -2369,3 +2415,709 @@ angular.module('magnoliaApp')
 
 
 }]);
+
+angular.module('magnoliaApp')
+.controller('AdminPageCtrl',
+['$location', '$scope',function($location, $scope) {
+
+	$scope.getClassForMenu = function(path) {
+		var url = $location.absUrl();
+		if (url.indexOf(path) > 0) {
+			return 'menuSelected';
+		} else {
+			return '';
+		}
+		
+		
+	}
+
+}]);
+
+angular.module('magnoliaApp')
+.controller('AssetsCtrl',['$scope','FinancialAssets',function($scope,FinancialAssets) {
+
+	  $scope.filteredFinancialAssets = [];
+	  $scope.currentPage = 1; 
+      $scope.entryLimit = 10; 
+
+	  $scope.refreshGrid = function(page) {
+		    var begin = ((page - 1) * $scope.entryLimit);
+		    FinancialAssets.query({offset: begin, limit: $scope.entryLimit},function(data, headers) {
+				  $scope.currentPage = page; 
+				  $scope.financialAssets = data;
+				  $scope.filteredFinancialAssets = data;;
+				  $scope.totalItems =  headers('record-count');
+			});
+	  }	  
+
+	  $scope.refreshGrid($scope.currentPage);
+	  
+	  $scope.removeAsset = function (index,asset) {
+			FinancialAssets.remove({id: asset._id}, function() {
+				$scope.refreshGrid($scope.currentPage);
+		  });
+	  };
+
+	  $scope.getClass = function(fd) {
+		  var fdMaturityDate = new Date(fd.maturityDate);
+		  var today = new Date();
+		  if ( today >= fdMaturityDate) {
+			 return 'danger';
+		  }
+		  return '';
+	  };
+
+
+}]);
+
+angular.module('magnoliaApp')
+.controller('TasksCtrl',['$scope','Tasks',function($scope,Tasks) {
+
+	  $scope.filteredTasks = [];
+	  $scope.currentPage = 1; 
+      $scope.entryLimit = 10; 
+
+	  $scope.refreshGrid = function(page) {
+		    var begin = ((page - 1) * $scope.entryLimit);
+		    Tasks.query({offset: begin, limit: $scope.entryLimit},function(data, headers) {
+				  $scope.currentPage = page; 
+				  $scope.tasks = data;
+				  $scope.filteredTasks = data;;
+				  $scope.totalItems =  headers('record-count');
+			});
+	  }	  
+
+	  $scope.refreshGrid($scope.currentPage);
+	  
+	  $scope.removeTask = function (index,task) {
+			Tasks.remove({id: task._id}, function() {
+				$scope.refreshGrid($scope.currentPage);
+		  });
+	  };
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('PropertyCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('EmailSettingCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ImportDataCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+	$scope.importEntities = ['Apartments','Users','Vendors','Financial Assets','AMCs','Receipts','Payments'];
+
+
+}]);
+
+angular.module('magnoliaApp')
+.controller('ModalImportCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+	$scope.exportEntities = ['Apartments','Users','Vendors','Financial Assets','AMCs','Receipts','Payments'];
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ExportDataCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+	$scope.exportEntities = ['Apartments','Users','Vendors','Financial Assets','AMCs','Receipts','Payments'];
+
+}]);
+
+angular.module('magnoliaApp')
+.controller('ModalExportCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+	$scope.exportEntities = ['Apartments','Users','Vendors','Financial Assets','AMCs','Receipts','Payments'];
+
+}]);
+
+
+
+angular.module('magnoliaApp')
+.controller('EmailTemplatesCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+
+}]);
+
+angular.module('magnoliaApp')
+.controller('FunctionalAreasCtrl',
+['$rootScope', '$scope',function($rootScope, $scope) {
+
+
+}]);
+
+angular.module('magnoliaApp').controller('UserManagementCtrl',['$scope','AppUsers','Registrations','Auth',function($scope,AppUsers,Registrations,Auth) {
+
+	$scope.refreshUserGrid = function() {		
+		$scope.users= AppUsers.query();
+	}	  
+
+	$scope.refreshUserGrid();
+
+    $scope.removeUser = function (index,user) {
+		AppUsers.remove({id: user._id}, function() {
+				$scope.refreshUserGrid();
+		});
+	};
+
+
+	$scope.refreshRegistrationGrid = function() {		
+		$scope.registrations= Registrations.query();
+	}	  
+
+	$scope.refreshRegistrationGrid();
+
+    $scope.acceptRegistration = function (index,registration) {
+
+	    var user = new AppUsers({
+							username : registration.emailid,
+							role : { "bitMask": 8, "title": 'owner' },
+							phonenumber : registration.phonenumber,
+							apartmentnumber : registration.apartmentno
+					 });		
+
+		user.$save(function () {
+						AlertService.clear();
+						AlertService.success('User ' + registration.username + ' added.' );
+					}, function () {
+						AlertService.clear();
+						AlertService.success('Error while adding user to the system.' );
+					});
+
+		Registrations.remove({id: registration._id}, function() {
+				$scope.refreshRegistrationGrid();
+		});
+		$scope.refreshUserGrid();
+	};
+
+    $scope.removeRegistration = function (index,registration) {
+		Registrations.remove({id: registration._id}, function() {
+				$scope.refreshRegistrationGrid();
+		});
+	};
+
+
+    function buildAccessLevels(accessLevelDeclarations, userRoles){
+
+        var accessLevels = {};
+        for(var level in accessLevelDeclarations){
+
+            if(typeof accessLevelDeclarations[level] == 'string'){
+                if(accessLevelDeclarations[level] == '*'){
+
+                    var resultBitMask = '';
+
+                    for( var role in userRoles){
+                        resultBitMask += "1"
+                    }
+                    //accessLevels[level] = parseInt(resultBitMask, 2);
+                    accessLevels[level] = {
+                        bitMask: parseInt(resultBitMask, 2)
+                    };
+                }
+                else console.log("Access Control Error: Could not parse '" + accessLevelDeclarations[level] + "' as access definition for level '" + level + "'")
+
+            }
+            else {
+
+                var resultBitMask = 0;
+                for(var role in accessLevelDeclarations[level]){
+                    if(userRoles.hasOwnProperty(accessLevelDeclarations[level][role]))
+                        resultBitMask = resultBitMask | userRoles[accessLevelDeclarations[level][role]].bitMask
+                    else console.log("Access Control Error: Could not find role '" + accessLevelDeclarations[level][role] + "' in registered roles while building access for '" + level + "'")
+                }
+                accessLevels[level] = {
+                    bitMask: resultBitMask
+                };
+            }
+        }		
+        return accessLevels;
+	  }
+
+
+	  $scope.getUserRole = function(user) {
+
+			 var accessRights = [];
+
+			 if(user.admin) {
+				 accessRights.push('admin');
+			 }
+
+			 if(user.chairman) {
+				 accessRights.push('chairman');
+			 }
+
+			 if(user.secretary) {
+				 accessRights.push('secretary');
+			 }
+
+			 if(user.treasurer) {
+				 accessRights.push('treasurer');
+			 }
+
+			 if(user.member) {
+				 accessRights.push('member');
+			 }
+
+			 if(user.manager) {
+				 accessRights.push('manager');
+			 }
+
+			 if(user.owner) {
+				 accessRights.push('owner');
+			 }
+
+			var accesslevels = {
+					"userAccess" : accessRights };
+
+
+			var userRole = {
+				"bitMask": buildAccessLevels(accesslevels,Auth.userRoles).userAccess.bitMask,
+				"title" : accessRights.join()
+			}
+
+			return userRole;
+
+	  }
+
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ModalFinancialAssetCtrl',['$scope','$modal','$log',function($scope, $modal, $log) {
+
+	$scope.open = function (item,index) {
+		$scope.active = item;
+		var modalInstance = $modal.open({
+		  templateUrl: 'financialAssetModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'ModalInstanceFinancialAssetCtrl',
+		  windowClass : 'modal-huge',
+		  resolve: {
+			item: function () {
+			  return item;
+			}
+		  }
+		});
+
+		modalInstance.result.then(function (selectedItem) {}, function () {
+				console.log("financial Asset updated");
+				}, function () {
+				console.log("canceled");
+		});
+	};
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ModalInstanceFinancialAssetCtrl',['$scope','$modalInstance','FinancialAssets','AlertService',function($scope,$modalInstance,FinancialAssets,AlertService) {
+
+  $scope.contact = {};
+
+  $scope.ok = function () {	
+
+	    var params = {id: $scope.item._id};
+		$scope.item.$update(params,function() {
+			AlertService.clear();
+			AlertService.success('Information for Financial Assets is updated');
+		});
+		$modalInstance.close();
+
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('NewFinancialAssetModalCtrl',['$scope','$modal','$log','FinancialAssets',function($scope,$modal,$log,FinancialAssets) {
+
+	$scope.open = function () {
+		var modalInstance = $modal.open({
+		  templateUrl: 'newFinancialAssetModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'NewFinancialAssetsModalInstanceCtrl',
+		  resolve: {
+				items: function () {
+				  return $scope;
+				}
+			  }
+		});
+
+		modalInstance.result.then(function (financialassets) {
+			    $scope.refreshGrid($scope.currentPage);
+				}, function () {
+				console.log("canceled");
+		});
+  };
+}]);
+
+angular.module('magnoliaApp')
+.controller('NewFinancialAssetsModalInstanceCtrl',['$scope','$modalInstance','FinancialAssets',function($scope,$modalInstance,FinancialAssets) {
+
+  
+  $scope.item = {};
+
+  $scope.banks =  ['ICICI Bank','IDBI Bank','SBI Bank','Punjab National Bank','HDFC Bank','Saraswat Bank','Kotak Mahindra Bank','Yes Bank','Allahabad Bank',
+	'Andhra Bank','Bank of Baroda','Bank of India', 'Bank of Maharastra','Bhartiya Mahila Bank','Canara Bank','Central Bank of India','Corporation Bank',
+	'Dena Bank','Indian Bank','Indian Overseas Bank','Oriental Bank of Commerce','Punjab and Sind Bank','Syndicate Bank','UCO Bank','Union Bank of India',
+	'United Bank of India','Vijaya Bank','State Bank of India','State Bank of Bikaner & Jaipur','State Bank of Hyderabad','State Bank of Mysore','State Bank of Patiala',
+	'State Bank of Travancore','IndusInd Bank','ING Vysya Bank','Karnataka Bank','Karur Vysya Bank','Lakshmi Vilas Bank','Nainital Bank','Tamilnadu Mercantile Bank',
+	'Dhanlaxmi Bank','Federal Bank','City Union Bank','Development Credit Bank','BNP Paribas','HSBC','Citibank N.A.'];
+
+  $scope.ok = function () {	
+
+	  var financialAsset = new FinancialAssets({
+						certificateNo : $scope.item.certificateNo,
+						date : $scope.item.date,
+						maturityDate : $scope.item.maturityDate,
+						period : $scope.item.period,
+						rateOfInterest: $scope.item.rateOfInterest,
+						principalAmt: $scope.item.principalAmt,
+						maturityAmount :$scope.item.maturityAmount,
+						bankName :$scope.item.bankName,
+						remarks :$scope.item.remarks	
+				 });
+
+	  financialAsset.$save(function (data) {
+						$modalInstance.close(data);
+					}, function ($http) {
+						console.log('Couldn\'t save Financial Asset data.');
+						$modalInstance.close();
+					});
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+
+}]);
+
+
+//
+angular.module('magnoliaApp')
+.controller('ModalTaskCtrl',['$scope','$modal','$log',function($scope, $modal, $log) {
+
+	$scope.open = function (item,index) {
+		$scope.active = item;
+		var modalInstance = $modal.open({
+		  templateUrl: 'taskModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'ModalInstanceTaskCtrl',
+		  windowClass : 'modal-huge',
+		  resolve: {
+			item: function () {
+			  return item;
+			}
+		  }
+		});
+
+		modalInstance.result.then(function (selectedItem) {}, function () {
+				console.log("Task updated");
+				}, function () {
+				console.log("canceled");
+		});
+	};
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ModalInstanceTaskCtrl',['$scope','$modalInstance','Tasks','AlertService',function($scope,$modalInstance,Tasks,AlertService) {
+
+  $scope.contact = {};
+
+  $scope.ok = function () {	
+
+	    var params = {id: $scope.item._id};
+		$scope.item.$update(params,function() {
+			AlertService.clear();
+			AlertService.success('Information for task is updated');
+		});
+		$modalInstance.close();
+
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('NewTaskModalCtrl',['$scope','$modal','$log','Tasks',function($scope,$modal,$log,Tasks) {
+
+	$scope.open = function () {
+		var modalInstance = $modal.open({
+		  templateUrl: 'newTaskModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'NewTasksModalInstanceCtrl',
+		  resolve: {
+				items: function () {
+				  return $scope;
+				}
+			  }
+		});
+
+		modalInstance.result.then(function (financialassets) {
+			    $scope.refreshGrid($scope.currentPage);
+				}, function () {
+				console.log("canceled");
+		});
+  };
+}]);
+
+angular.module('magnoliaApp')
+.controller('NewTasksModalInstanceCtrl',['$scope','$modalInstance','Tasks','FunctionalAreas','Auth',function($scope,$modalInstance,Tasks,FunctionalAreas,Auth) {
+  
+  $scope.task = {};
+  $scope.functionAreas = [];
+  $scope.taskPriorities = ['Urgent','High','Major','Medium','Low'];
+  $scope.task.priority = "Medium";
+  
+  FunctionalAreas.query(function(areas, headers) {
+		$scope.functionAreas = areas; 
+  });
+
+  $scope.ok = function () {	
+
+	  var task = new Tasks({
+						functionalArea : $scope.task.functionalArea.name,
+						desc : $scope.task.desc,
+						createdDate : new Date(),
+						createdBy : Auth.user.username,
+						priority : $scope.task.priority,
+					    status: 0,
+						notes: $scope.tasks.notes
+				 });
+
+	  task.$save(function (data) {
+						$modalInstance.close(data);
+					}, function ($http) {
+						console.log('Couldn\'t save task data.');
+						$modalInstance.close();
+					});
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+}]);
+//--------user modal ----------------------
+
+angular.module('magnoliaApp')
+.controller('ModalUserCtrl',['$scope','$modal','$log','$http',function($scope, $modal, $log,$http) {
+
+	var request = $http({
+			method: "get",
+			url: "/api/apartmentnumbers"
+	});
+
+	request.success(function(data) {
+			$scope.apartmentnumbers = data;
+	});
+
+	$scope.open = function (item,index) {
+		$scope.active = item;
+		var modalInstance = $modal.open({
+		  templateUrl: 'userModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'ModalInstanceUserCtrl',
+		  windowClass : 'modal-huge',
+		  resolve: {
+			item: function () {
+			  return item;
+			}
+		  }
+		});
+
+		modalInstance.result.then(function (selectedItem) {}, function () {
+				console.log("User updated");
+				}, function () {
+				console.log("canceled");
+		});
+	};
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('ModalInstanceUserCtrl',['$scope','$modalInstance','AppUsers','AlertService',function($scope,$modalInstance,AppUsers,AlertService) {
+
+  var roleArray = $scope.item.role.title.split(',');
+
+  for (var i in roleArray) {
+	$scope.item[roleArray[i]] = true; 
+  }
+
+  $scope.checkApt = function() {
+      if ($scope.user.owner)  {
+		  if($scope.user.flatNo) {
+			  return true;
+		  } else {
+			  return false;
+		  }
+      } 
+	  return true;
+  }
+
+
+  $scope.ok = function () {	
+	    var params = {id: $scope.item._id};
+		$scope.item.role  = $scope.getUserRole($scope.item);
+		$scope.item.$update(params,function() {
+			AlertService.clear();
+			AlertService.success('Information for user is updated');
+		});
+		$modalInstance.close();
+
+  };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+}]);
+
+
+angular.module('magnoliaApp')
+.controller('NewUserModalCtrl',['$scope','$modal','$log','AppUsers','$http',function($scope,$modal,$log,AppUsers,$http) {
+
+	var request = $http({
+			method: "get",
+			url: "/api/apartmentnumbers"
+	});
+
+	request.success(function(data) {
+			$scope.apartmentnumbers = data;
+	});
+
+	$scope.open = function () {
+		var modalInstance = $modal.open({
+		  templateUrl: 'newUserModal',
+          scope : $scope,
+          backdrop: 'static',
+		  controller: 'NewUserModalInstanceCtrl',
+		  resolve: {
+				items: function () {
+				  return $scope;
+				}
+			  }
+		});
+
+		modalInstance.result.then(function (user) {
+					$scope.refreshGrid($scope.currentPage);
+					AlertService.clear();
+					AlertService.success('New user confirmation mail sent to ' + user.username);
+				}, function () {
+				console.log("canceled");
+		});
+  };
+}]);
+
+angular.module('magnoliaApp')
+.controller('NewUserModalInstanceCtrl',['$scope','$modalInstance','AppUsers','$http',function($scope,$modalInstance,AppUsers,$http) {
+
+  $scope.user = {};
+
+
+  $scope.checkApt = function() {
+      if ($scope.user.owner)  {
+		  if($scope.user.flatNo) {
+			  return true;
+		  } else {
+			  return false;
+		  }
+      } 
+	  return true;
+  }
+
+  $scope.ownerCheck = function() {
+	$scope.user.flatNo = null;
+  }
+
+  $scope.aptChange = function() {
+      var ownerDataRequest = $http({
+	        method: "get",            
+	        url: "/api/apartments/owner/" + $scope.user.flatNo
+      });
+
+      ownerDataRequest.success(function(owner) {
+	        $scope.user.name = owner.name;
+            if (owner.emails) {
+                $scope.user.email =  owner.emails[0];
+            }
+            if (owner.phones) {
+                $scope.user.phone = owner.phones[0];
+            }
+            if (owner.coowner && owner.coowner.name) {
+                $scope.hasCoOwner = true;
+				$scope.coowner = onwer.coowner;
+            }
+     });
+
+  }
+
+  $scope.ok = function () {	
+
+	var userRole =  $scope.getUserRole($scope.user);
+    var aptNo = 'all';
+	if ($scope.user.flatNo) {
+		aptNo = $scope.user.flatNo;
+	} 
+
+     var user = new AppUsers({
+						username : $scope.user.email,
+						role : userRole,
+						apartmentnumber : aptNo
+				 });
+	
+
+	  user.$save(function (data) {
+						$modalInstance.close(user);
+					}, function ($http) {
+						console.log('Couldn\'t add user.');
+						$modalInstance.close();
+					});
+      };
+
+  $scope.cancel = function () {
+    $modalInstance.dismiss('cancel');
+  };
+
+}]);
+
+
+
+

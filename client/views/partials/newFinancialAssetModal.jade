@@ -1,0 +1,53 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 New Financial Asset
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='assetForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='certificateNumber') Certificate Number
+                  .col-md-6
+                      input#certificateNumber.form-control.input-xlarge(ng-model='item.certificateNo', name='textinput',placeholder='Certificte Number',required='', type='text')
+             .form-group
+                  label.col-md-4.control-label(for='startDate')  Start Date:
+                  .col-md-3
+                    input#startDate.form-control.iconCalendar(type='startDate', ng-model='item.date', datepicker-popup='dd-MM-yyyy', placeholder='Start Date', show-weeks='false', show-button-bar='false', min='01-01-2014')
+             .form-group
+                  label.col-md-4.control-label(for='maturityDate')  Maturity Date:
+                  .col-md-3
+                    input#maturityDate.form-control.iconCalendar(type='maturityDate', ng-model='item.maturityDate', datepicker-popup='dd-MM-yyyy', placeholder='Maturity Date', show-weeks='false', show-button-bar='false', min='01-01-2014')
+             .form-group
+                  label.col-md-4.control-label(for='interestRate') Interest Rate:
+                  .col-md-2
+                     .input-group
+                         span.input-group-addon %
+                         input#interestRate.form-control.input-large(ng-model='item.rateOfInterest',name='rateOfInterest', money='',type='text', placeholder='Interest Rate', ng-required='true')
+             .form-group
+                  label.col-md-4.control-label(for='principalAmt') Principal Amount:
+                  .col-md-4
+                     .input-group
+                         span.input-group-addon &#8377;
+                         input#principalAmt.form-control.input-large(ng-model='item.principalAmt', money='',name='amout', type='text', placeholder='Principal Amount', ng-required='true')
+             .form-group
+                  label.col-md-4.control-label(for='maturityAmount') Maturity Amount:
+                  .col-md-4
+                     .input-group
+                         span.input-group-addon &#8377;
+                         input#maturityAmount.form-control.input-large(ng-model='item.maturityAmount', money='',name='amout', type='text', placeholder='Maturity Amount', ng-required='true')
+             .form-group
+                  label.col-md-4.control-label(for='bankname') Bank Name
+                  .col-md-4
+                       input#bankname.form-control.input-xlarge(ng-model='item.bankName', name='bankname', ng-disabled='readonly', type='text', placeholder='Bank Name', typeahead='bank for bank in banks | filter:$viewValue | limitTo:8')
+             .form-group
+                  label.col-md-4.control-label(for='textarea') Notes
+                  .col-md-6
+                       textarea#notes.form-control(ng-model='item.remarks', name='notes', rows='4', cols='150')
+
+
+
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!assetForm.$valid', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel
+

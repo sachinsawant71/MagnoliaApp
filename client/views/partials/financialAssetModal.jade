@@ -1,0 +1,34 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;     
+     h4 Financial Asset Information
+.modal-body
+    table.table.table-bordered
+       tbody
+          tr
+               td Certificate Number
+               td {{item.certificateNo}}
+          tr
+               td Start Date
+               td {{item.date | date:'dd-MM-yyyy'}}
+          tr
+               td Maturity Date
+               td {{item.maturityDate | date:'dd-MM-yyyy'}}
+          tr
+               td Interest Rate
+               td {{item.rateOfInterest}} %
+          tr
+               td Principal Amount
+               td {{item.principalAmt | currency : "&#8377;"}}
+          tr
+               td Maturity Amount
+               td {{item.maturityAmount | currency : "&#8377;"}}
+          tr
+               td Bank Name
+               td {{item.bankName}}
+          tr
+               td Remark
+               td {{item.remarks}}
+ .modal-footer
+    div
+      button.btn.btn-warning(ng-click='cancel()') Cancel
+

@@ -10,7 +10,8 @@ MongoClient.connect('mongodb://127.0.0.1:27017/magnolia', function(err, db) {
 			console.log("cleaned the collection");
 			var accounts = [
 							{username: 'admin@magnolia.com', password: 'unicorn', role: { "bitMask": 4, "title": 'admin' },apartmentnumber : "all" },
-							{username: 'sachin_sawant71@yahoo.com', password: 'magnolia1', role: { "bitMask": 2, "title": 'user' }, apartmentnumber : "D-105"},
+             				{username: 'manager@magnolia.com', password: 'goldfish', role: { "bitMask": 20, "title": 'manager' },apartmentnumber : "all" },
+							{username: 'sachin_sawant71@yahoo.com', password: 'magnolia1', role: { "bitMask": 8, "title": 'owner' }, apartmentnumber : "D-105"}
 							];
 
 			var l = accounts.length;

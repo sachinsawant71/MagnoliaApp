@@ -4,6 +4,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mocha-test');
     grunt.loadNpmTasks('grunt-env');
     grunt.loadNpmTasks('grunt-nodemon');
+	grunt.loadNpmTasks('grunt-ng-constant');
 
     grunt.initConfig({
 
@@ -32,7 +33,22 @@ module.exports = function(grunt) {
             dev: {
                 script: 'server.js'
             }
-        }
+        },
+
+	    ngconstant: {
+			options: {
+			  name: 'config',
+			  dest: 'config.js',
+			  constants: {
+				package: grunt.file.readJSON('package.json')
+			  },
+			  values: {
+				debug: true
+			  }
+			},
+			build: {
+			}
+		}
 
     });
 

@@ -6,8 +6,10 @@ html(lang='en', data-ng-app='magnoliaApp')
         link(href="/components/bootstrap/dist/css/bootstrap.min.css", rel="stylesheet")
         link(href="/components/font-awesome/css/font-awesome.min.css", rel="stylesheet")
         link(rel='stylesheet', href='/css/loginstyle.css')
+        link(rel='stylesheet', type='text/css', href='/vendor/chosen.css')
         link(rel='stylesheet', href='/css/app.css')
         link(rel='stylesheet', href='/css/gridforms.css')
+        link(rel='stylesheet', href='/css/awesome-bootstrap-checkbox.css')
         link(rel="shortcut icon",href="/favicon.ico",type="image/x-icon")
         link(rel="icon", href="/favicon.ico",type="image/x-icon")
 
@@ -68,6 +70,7 @@ html(lang='en', data-ng-app='magnoliaApp')
         script(src='/components/textAngular/dist/textAngular.min.js')
         script(src='/components/ng-csv/build/ng-csv.min.js')
         script(src='/components/angular-bootstrap-checkbox/angular-bootstrap-checkbox.js')
+        script(src='/vendor/chosen.jquery.js')
 
         script(src='/js/routingConfig.js')
         script(src='/js/app.js')
@@ -113,3 +116,25 @@ html(lang='en', data-ng-app='magnoliaApp')
             include partials/private/aptrulebook
         script(type="text/ng-template", id="private/dashboard")
             include partials/private/dashboard
+        script(type="text/ng-template", id="private/admin")
+            include partials/private/admin
+        script(type="text/ng-template", id="private/assets")
+            include partials/private/assets
+        script(type="text/ng-template", id="private/tasks")
+            include partials/private/tasks
+        script(type="text/ng-template", id="private/property")
+            include partials/private/property
+        script(type="text/ng-template", id="private/importdata")
+            include partials/private/importdata
+        script(type="text/ng-template", id="private/exportdata")
+            include partials/private/exportdata
+        script(type="text/ng-template", id="private/emailtemplates")
+            include partials/private/emailtemplates
+        script(type="text/ng-template", id="private/functionalareas")
+            include partials/private/functionalareas
+        script(type="text/ng-template", id="private/usermanagement")
+            include partials/private/usermanagement
+        script(type="text/ng-template", id="private/emailsetting")
+            include partials/private/emailsetting
+        script(type="text/ng-template", id="forgotpassword")
+            include partials/forgot

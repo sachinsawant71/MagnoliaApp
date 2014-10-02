@@ -17,11 +17,11 @@ var users = [];
 Fiber(function() {
 	var Server = require("mongo-sync").Server;
     var server = new Server(config.db_host + ":" + config.db_port );
+    var db = server.db(config.db_name);
 	if (config.db_user) {
-		server.auth(config.db_user, config.db_password);
-	}
-	
-    users = server.db(config.db_name).getCollection("users").find().toArray();
+		db.auth(config.db_user, config.db_password);
+	}	
+    users = db.getCollection("users").find().toArray();
 	for (i=0;i<users.length ;i++ ) {
 		users[i].id = users[i]._id;
 	}
@@ -93,7 +93,6 @@ module.exports = {
     localStrategy: new LocalStrategy(
         function(username, password, done) {
 	
-			console.log(username);
             var user = module.exports.findByUsername(username);
 
             if(!user) {

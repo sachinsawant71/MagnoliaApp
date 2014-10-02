@@ -1,0 +1,28 @@
+p Property Details Page
+.panel.panel-default
+  form.form-horizontal.modal-form    
+    fieldset
+     .form-group
+       label.col-md-4.control-label(for='firmName') Apartment Name
+       .col-md-5
+         input#firmName.form-control.input-md(name='firmName', type='text', placeholder='Apartment Name')
+     .form-group
+       label.col-md-4.control-label(for='portalname') Portal Name
+       .col-md-5
+         input#portalname.form-control.input-md(name='portalname', type='text', placeholder='Portal Name')
+     .form-group
+       label.col-md-4.control-label(for='address') Address
+       .col-md-5
+          textarea#address.form-control.input-md(name='address', rows='4') Postal Address
+     .form-group
+       label.col-md-4.control-label(for='registrationno') Registration Number
+       .col-md-4
+          input#registrationno.form-control.input-md(name='registrationno', type='text', placeholder='Registration No')
+     .form-group
+        label.col-md-4.control-label(for='pan') PAN 
+        .col-md-4
+           input#pan.form-control.input-md(name='pan', type='text', placeholder='Pan Card No')
+  .panel-footer
+       .btn-group.pull-right
+         a.btn.btn-success.btn-sm(href='#') Edit       
+       .clearfix

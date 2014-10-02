@@ -1,6 +1,6 @@
-div(data-ng-controller='NavCtrl')
+div(data-ng-controller='NavCtrl' no-background-image)
   .container
-    .row
+     .row
       .col-12
         .navbar.navbar-default(role="navigation")
            #navbarCollapse(class="collapse navbar-collapse navbar-default")
@@ -11,7 +11,7 @@ div(data-ng-controller='NavCtrl')
                         | Home
                   li
                      a(href="/admin/apartments",active-nav, data-access-level='accessLevels.admin')
-                        i.fa.fa-cogs
+                        i.fa.fa-folder-open
                         | Apartments
                   li
                      a(href="/admin/receipts",active-nav, data-access-level='accessLevels.admin') 
@@ -26,13 +26,25 @@ div(data-ng-controller='NavCtrl')
                         i.fa.fa-suitcase
                         | Vendors
                   li
-                     a(href="/admin/members",active-nav, data-access-level='accessLevels.admin' )
+                     a(href="/admin/members",active-nav, data-access-level='accessLevels.manager' )
                         i.fa.fa-group
                         | Members
                   li
-                     a(href="/admin/documents",active-nav, data-access-level='accessLevels.admin')
+                     a(href="/admin/tasks",active-nav, data-access-level='accessLevels.manager')
+                        i.fa.fa-tasks
+                        | Tasks
+                  li
+                     a(href="/admin/assets",active-nav, data-access-level='accessLevels.manager')
+                        i.fa.fa-tags
+                        | Assets
+                  li
+                     a(href="/admin/documents",active-nav, data-access-level='accessLevels.manager')
                         i.fa.fa-archive
                         | Documents
+                  li
+                     a(href="/admin/admin",active-nav, data-access-level='accessLevels.admin')
+                        i.fa.fa-map-marker
+                        | Admin
 
 .container
     .row

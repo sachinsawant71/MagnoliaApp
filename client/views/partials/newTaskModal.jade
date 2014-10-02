@@ -1,0 +1,29 @@
+.modal-header
+     button(type="button" class="close" ng-click="cancel()" aria-hidden="true") &times;
+     h4 New Task
+.modal-body
+  div
+         form.form-horizontal.modal-form(name='taskForm', novalidate='')
+            fieldset
+               .form-group
+                  label.col-md-4.control-label(for='functionalArea') Functional Area
+                  .col-md-4
+                      select#functionalArea.form-control(ng-model="task.functionalArea", ng-required='true', ng-options="area.name for area in functionAreas")   
+               .form-group
+                  label.col-md-4.control-label(for='taskDesc') Task Description
+                  .col-md-8
+                     input#taskDesc.form-control.input-xlarge(name='taskDesc', ng-model='task.desc', placeholder='Task Desciption', ng-required='true', type='text')
+               .form-group
+                  label.col-md-4.control-label(for='priority') Priority
+                  .col-md-4
+                     select.form-control(name='priority', ng-model='task.priority',ng-required='true', ng-options='priority for priority in taskPriorities')
+               .form-group
+                  label.col-md-4.control-label(for='textarea') Notes
+                  .col-md-6
+                       textarea#notes.form-control(ng-model='tasks.notes', name='notes', rows='4', cols='150')
+
+.modal-footer
+    div
+      button.btn.btn-primary(ng-disabled='!taskForm.$valid', ng-click='ok()') Save
+      button.btn.btn-warning(ng-click='cancel()') Cancel
+

@@ -1,0 +1,44 @@
+p Tasks Module
+        alerts
+        .navbar.navbar-default
+          form.navbar-form.navbar-left(role="search")
+            .form-group
+               input#search-control.form-control(type="text", ng-model="query", placeholder="Search Tasks")
+               span#search-icon.glyphicon.glyphicon-search
+          form.navbar-form.navbar-right(role="search")
+               #menu-action.btn-group.navbar-right
+                  button.btn.btn-warning(type='button', ng-click="open()", ng-controller='NewTaskModalCtrl')
+                            span.glyphicon.glyphicon-plus
+                            |New Task
+        table.table.table-condensed
+          tbody
+             tr
+                th Functional Area
+                th Description
+                th Assigned To
+                th Priority
+                th Status                
+                th.action Details
+                th.action Delete
+             tr(ng-class='', ng-repeat='item in filteredTasks | filter:query')
+                td {{item.functionalArea}}
+                td {{item.desc}}
+                td {{item.assignedTo}}
+                td {{item.priority}}
+                td
+                   span.label.label-default(ng-show='item.status == "0"') Not Started
+                   span.label.label-success(ng-show='item.status == "1"') In Progress
+                   span.label.label-warning(ng-show='item.status == "2"') Complete
+                td.action(ng-controller='ModalTaskCtrl')
+                   a(href='', ng-click='open($index,item)')
+                      i.glyphicon.glyphicon-wrench
+                td.action
+                   a(href='', ng-click='removeTask($index,item)')
+                      i.glyphicon.glyphicon-remove
+
+        div.col-md-12
+            pagination(direction-links="true" boundary-links="true" total-items="totalItems" page="currentPage" items-per-page="entryLimit" on-select-page="refreshGrid(page)")
+        script#taskModal(type="text/ng-template")
+             ng-include(src="'/partials/taskModal.jade'")
+        script#newTaskModal(type="text/ng-template")
+             ng-include(src="'/partials/newTaskModal.jade'")

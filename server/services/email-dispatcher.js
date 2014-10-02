@@ -47,8 +47,8 @@ EM.sendMail = function(mailTemplate,subjetLine,letterObject,emails,callback) {
 		var smtpTransport = nodemailer.createTransport("SMTP",{
 				service: "Gmail",
 				auth: {
-					user: 'xxx@gmail.com',
-					pass: 'vvvvv'
+					user: 'sachinsawant525@gmail.com',
+					pass: 'blackberry12#$'
 				}
 		});
 

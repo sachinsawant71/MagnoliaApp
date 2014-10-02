@@ -1,0 +1,44 @@
+#adminmodule
+  .container(style="padding-left:0px;")
+    .row
+        .col-sm-2.col-md-2
+          #configigAccordion.panel-group
+            .panel.panel-default
+              .panel-heading
+                h4.panel-title
+                  a(data-parent='#accordion', href='#collapseOne')
+                    span.glyphicon.glyphicon-th
+                    | Configuration
+              #collapseOne.panel-collapse.collapse.in
+                .panel-body
+                  table#configTable.table
+                    tr(ng-class="getClassForMenu('property')")
+                      td
+                        span.glyphicon.glyphicon-pencil.text-info
+                        a(ui-sref=".property") Property Details
+                    tr(ng-class="getClassForMenu('emailsetting')")
+                      td
+                        span.glyphicon.glyphicon-envelope.text-default
+                        a(ui-sref=".emailsetting") Email Settings
+                    tr(ng-class="getClassForMenu('usermanagement')")
+                      td
+                        span.glyphicon.glyphicon-user.text-default
+                        a(ui-sref=".usermanagement") User Management
+                    tr(ng-class="getClassForMenu('importdata')")
+                      td
+                        span.glyphicon.glyphicon-import.text-default
+                        a(ui-sref=".importdata") Import Data
+                    tr(ng-class="getClassForMenu('exportdata')")
+                      td
+                        span.glyphicon.glyphicon-export.text-default
+                        a(ui-sref=".exportdata") Export Data
+                    tr(ng-class="getClassForMenu('emailtemplates')")
+                      td
+                        span.glyphicon.glyphicon-file.text-default
+                        a(ui-sref=".emailtemplates") Email Templates
+                    tr(ng-class="getClassForMenu('functionalareas')")
+                      td
+                        span.glyphicon.glyphicon-paperclip.text-default
+                        a(ui-sref=".functionalareas") Functional Areas
+        .col-sm-10.col-md-10
+             div(ui-view="")

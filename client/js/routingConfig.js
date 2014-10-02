@@ -9,7 +9,14 @@
         roles :[
             'public',
             'user',
-            'admin'],
+            'admin',
+			'owner',
+			'manager',
+			'member',
+			'chairman',
+			'secretary',
+			'tenant',
+			'treasurer'],
 
         /*
         Build out all the access levels you want referencing the roles listed above
@@ -18,8 +25,13 @@
         accessLevels : {
             'public' : "*",
             'anon': ['public'],
-            'user' : ['user', 'admin'],
-            'admin': ['admin']
+            'user' : ['user','admin','owner','manager','member','chairman','treasurer'],
+			'owner': ['owner'],
+            'admin': ['admin'],
+			'manager' : ['manager'],
+			'member' : ['member'],
+			'chairman' : ['member','chairman'],
+			'treasurer' : ['member','treasurer']
         }
 
     }
@@ -46,7 +58,6 @@
             };
             bitMask = (intCode << 1 ).toString(2)
         }
-
         return userRoles;
     }
 
@@ -87,8 +98,7 @@
                     bitMask: resultBitMask
                 };
             }
-        }
-
+        }		
         return accessLevels;
     }
 

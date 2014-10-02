@@ -36,8 +36,8 @@ module.exports = {
     },
 
     findById: function(req, res) {
-			membersProvider.findById(req.params.id, function(error, member) {
-			res.send(apartment);
+		membersProvider.findById(req.params.id, function(error, member) {
+			res.send(member);
 		});
     },
     delete: function(req, res) {

@@ -30,9 +30,8 @@ angular.module('magnoliaApp')
                 user = currentUser;
             return user.role.title == userRoles.user.title || user.role.title == userRoles.admin.title;
         },
-        register: function(user, success, error) {
-            $http.post('/register', user).success(function(res) {
-                changeUser(res);
+        forgot: function(userEmail, success, error) {
+            $http.post('/forgot', userEmail).success(function(res) {
                 success();
             }).error(error);
         },
@@ -49,7 +48,10 @@ angular.module('magnoliaApp')
                     role: userRoles.public,
 					apartmentnumber: ''
                 });
-                success();
+
+				if(success){
+					success();
+				}
             }).error(error);
         },
         accessLevels: accessLevels,
@@ -120,6 +122,36 @@ angular.module('magnoliaApp')
             method: 'PUT'
         }});
 });
+
+angular.module('magnoliaApp')
+.factory('FinancialAssets', function ($resource) {
+    return $resource('/api/financialassets/:id', {}, { "update": {
+            method: 'PUT'
+        }});
+});
+
+angular.module('magnoliaApp')
+.factory('Tasks', function ($resource) {
+    return $resource('/api/tasks/:id', {}, { "update": {
+            method: 'PUT'
+        }});
+});
+
+angular.module('magnoliaApp')
+.factory('AppUsers', function ($resource) {
+    return $resource('/api/users/:id', {}, { "update": {
+            method: 'PUT'
+        }});
+});
+
+angular.module('magnoliaApp')
+.factory('Registrations', function ($resource) {
+    return $resource('/api/registrations/:id', {}, { "update": {
+            method: 'PUT'
+        }});
+});
+
+
 
 angular.module('magnoliaApp')
     .factory('printer', ['$rootScope', '$compile', '$http', '$timeout', function ($rootScope, $compile, $http, $timeout) {
